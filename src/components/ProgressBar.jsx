@@ -9,7 +9,7 @@ export default function ProgressBar({ current, total }) {
         </span>
         <span className="text-[10px] sm:text-xs font-semibold text-quiz-text/60">{percentage}%</span>
       </div>
-      <div className="h-2 sm:h-2.5 w-full bg-orange-100 rounded-full overflow-hidden">
+      <div className="h-2 sm:h-2.5 w-full bg-surface-track rounded-full overflow-hidden">
         <div 
           className="h-full bg-quiz-primary rounded-full transition-all duration-500 ease-out"
           style={{ width: `${percentage}%` }}

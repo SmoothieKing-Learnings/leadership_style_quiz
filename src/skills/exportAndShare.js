@@ -11,7 +11,9 @@ export const exportAndShare = async (elementId, filename = 'leadership-style-res
     const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
-      backgroundColor: '#FFF9EF', // Ensure correct background
+      // html2canvas only accepts a hex literal — this is the primary cream
+      // (`bg-primary` / `quiz-bg` in tailwind.config.js, design.md §2.1).
+      backgroundColor: '#FFF9EF',
     });
 
     canvas.toBlob(async (blob) => {

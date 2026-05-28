@@ -25,6 +25,26 @@ html.embed-mode {
 }
 
 /*
+ * Generic entrance fade — applied on screen mount via `animate-fade-in`.
+ * Was referenced in Welcome/Quiz/Results but the keyframes weren't defined
+ * (so the class was a no-op). Now produces a quick fade + tiny rise.
+ */
+@keyframes screen-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: screen-fade-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
  * Question transition animations.
  * QuizScreen wraps the question + options in a keyed div; when the key
  * changes (Next / Back), the wrapper re-mounts and the appropriate
@@ -62,6 +82,7 @@ html.embed-mode {
 
 /* Honor reduced-motion preferences. */
 @media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
   .animate-question-forward,
   .animate-question-backward {
     animation: none;
