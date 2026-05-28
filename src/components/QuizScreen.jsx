@@ -96,7 +96,7 @@ export default function QuizScreen({ onComplete }) {
               aria-label={`Option ${idx + 1}: ${option.text}`}
               aria-pressed={isSelected}
             >
-              <span className="text-sm sm:text-base font-medium text-quiz-text leading-snug">{option.text}</span>
+              <span className="text-xs sm:text-sm font-medium text-quiz-text leading-snug">{option.text}</span>
             </div>
           );
         })}
