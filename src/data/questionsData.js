@@ -58,7 +58,7 @@ export const QUESTIONS = [
   },
   {
     id: 'q6',
-    text: 'You\'re short-staffed and everyone is exhausted and morale is dropping. How do you make sure the team feels cared for?',
+    text: 'Your team is exhausted and morale is slipping. How do you show them you care?',
     options: [
       { id: 'q6-teacher', text: 'I keep everyone focused on the task so we can hit our operational must-dos and get out of the store on time.', styleId: 'teacher' },
       { id: 'q6-role_model', text: 'I lead from the front, work the longest and hardest, and show them by example that we don\'t drop our standards just because we\'re tired.', styleId: 'role_model' },

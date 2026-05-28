@@ -62,7 +62,7 @@ Each question presents one option per style. Option order is shuffled at runtime
 - **The Supporter** — I make sure my team member is okay first, help handle the guest's frustration, and we remake the drink together as a team.
 
 ### Question 6
-**You're short-staffed and everyone is exhausted and morale is dropping. How do you make sure the team feels cared for?**
+**Your team is exhausted and morale is slipping. How do you show them you care?**
 
 - **The Teacher** — I keep everyone focused on the task so we can hit our operational must-dos and get out of the store on time.
 - **The Role Model** — I lead from the front, work the longest and hardest, and show them by example that we don't drop our standards just because we're tired.

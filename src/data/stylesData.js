@@ -13,6 +13,7 @@ export const STYLES = [
     name: 'The Teacher',
     subtitle: 'Situational Leadership',
     focus: 'Building Technical Confidence',
+    summary: 'You lead with structure. Prep lists are accurate, instructions are clear, and new hires get up to speed faster because you walk them through every step. Your team trusts that the process won\'t drift on your shift.',
     strengths: [
       {
         title: 'Reliable Execution',
@@ -48,6 +49,7 @@ export const STYLES = [
     name: 'The Role Model',
     subtitle: 'Modeling Leadership',
     focus: 'Integrity through Action',
+    summary: 'You lead by example. You take the toughest station first, wipe the counters before asking anyone else, and your team adopts whatever standard they watch you hold. Integrity is the message — your actions are the lesson.',
     strengths: [
       {
         title: 'Setting the Pace',
@@ -83,6 +85,7 @@ export const STYLES = [
     name: 'The Coach',
     subtitle: 'Transformational Leadership',
     focus: 'Asking over Telling',
+    summary: 'You lead with questions. Instead of solving every problem yourself, you ask team members what they would do and help them think it through. Your team grows because you give them room to make and own the call.',
     strengths: [
       {
         title: 'Developing Shift Leads',
@@ -118,6 +121,7 @@ export const STYLES = [
     name: 'The Supporter',
     subtitle: 'Servant/Secure Base Leadership',
     focus: 'Emotional Safety',
+    summary: 'You lead with care. You stay calm when the shift is unraveling, notice when a team member is wearing thin, and people show up for you because you have shown up for them. The team holds together because you make it safe to.',
     strengths: [
       {
         title: 'Steady Under Pressure',

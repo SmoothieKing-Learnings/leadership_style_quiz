@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { ChevronDown, Share2, RotateCcw } from 'lucide-react';
 import { announceToScreenReader } from '../skills/a11yUtils';
 import { exportAndShare } from '../skills/exportAndShare';
+import OtherTypesModal from './OtherTypesModal';
+import { STYLES } from '../data/stylesData';
 
 // Strip the "The " prefix from style names so the one-row legend stays
 // readable at 9px on a mobile viewport (Leadership subtitles are too long
@@ -10,6 +12,14 @@ const legendLabel = (name) => name.replace(/^The\s+/i, '');
 
 export default function ResultsScreen({ resultsData, onRestart }) {
   const { allScores, topStyles } = resultsData;
+
+  // "Explore the other types" modal state. The trigger button auto-hides
+  // when no "other" types remain (all styles are tied at the top).
+  const [otherTypesOpen, setOtherTypesOpen] = useState(false);
+  const otherTypesAvailable = useMemo(() => {
+    const topIds = new Set(topStyles.map(s => s.id));
+    return STYLES.some(s => !topIds.has(s.id));
+  }, [topStyles]);
 
   useEffect(() => {
     const styleNames = topStyles.map(s => s.name).join(' and ');
@@ -230,6 +240,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
             );
           })}
         </div>
+
       </div>
 
       {/*
@@ -256,6 +267,31 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           <RotateCcw size={20} /> Retake Quiz
         </button>
       </div>
+
+      {/*
+        "Explore the other types →" footer link — quiet, low-priority
+        affordance, sits below the CTAs so it doesn't compete with the
+        in-card "Show full description" accordion for visual hierarchy.
+        Auto-hidden when no other types remain (rare full-tie edge case).
+      */}
+      {otherTypesAvailable && (
+        <button
+          type="button"
+          onClick={() => setOtherTypesOpen(true)}
+          className="mt-3 mx-auto text-xs font-medium text-quiz-text/60 hover:text-quiz-primary focus:outline-none focus:ring-2 focus:ring-quiz-primary/30 transition-colors rounded-md px-2 py-1"
+          aria-label="Explore the other leadership types"
+        >
+          Explore the other types →
+        </button>
+      )}
+
+      {otherTypesOpen && (
+        <OtherTypesModal
+          allStyles={STYLES}
+          topStyles={topStyles}
+          onClose={() => setOtherTypesOpen(false)}
+        />
+      )}
     </div>
   );
 }
