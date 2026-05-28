@@ -52,7 +52,7 @@ export default function WelcomeScreen({ onStart }) {
       >
         <button
           onClick={onStart}
-          className="min-h-[44px] min-w-[44px] px-8 py-4 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-lg hover:shadow-xl active:scale-95"
+          className="min-h-[44px] min-w-[44px] px-8 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-lg hover:shadow-xl active:scale-95"
           aria-label="Start the Leadership Style Quiz"
         >
           Let's Blend!

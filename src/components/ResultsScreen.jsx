@@ -100,7 +100,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                   {style.score}/{style.maxPossible}
                 </span>
               </div>
-              <div className="w-full h-1.5 bg-orange-50 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-surface-track rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-out"
                   style={{ width: `${style.percentage}%`, backgroundColor: style.color }}
@@ -120,14 +120,14 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           const shineOpen = isSectionOpen(shineKey, defaultOpen);
           const struggleOpen = isSectionOpen(struggleKey, defaultOpen);
           return (
-            <div key={style.id} className="bg-white p-3 rounded-2xl shadow-sm border border-orange-50 overflow-hidden">
+            <div key={style.id} className="bg-white p-3 rounded-2xl shadow-sm border border-orange-100 overflow-hidden">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-1">
                 <h3 className="text-xl sm:text-2xl font-bold text-quiz-text flex items-start gap-3 min-w-0 break-words">
                   <span className="w-4 h-4 mt-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }}></span>
                   <span className="min-w-0 break-words">{style.name}</span>
                 </h3>
                 {scored && (
-                  <span className="self-start flex-shrink-0 text-xs font-bold px-3 py-1 rounded-full text-white whitespace-nowrap"
+                  <span className="self-start flex-shrink-0 text-xs font-bold px-3 py-1 rounded-full text-quiz-bg whitespace-nowrap"
                     style={{ backgroundColor: style.color }}>
                     {scored.score}/{scored.maxPossible} pts
                   </span>
@@ -149,7 +149,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     aria-expanded={shineOpen}
                     className="w-full p-2.5 flex items-center justify-between text-xs uppercase tracking-wide text-green-800 font-bold cursor-pointer hover:bg-green-50/60 transition-colors"
                   >
-                    <span>Where You Shine</span>
+                    <span>Strengths</span>
                     <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${shineOpen ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${shineOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
@@ -172,7 +172,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     aria-expanded={struggleOpen}
                     className="w-full p-2.5 flex items-center justify-between text-xs uppercase tracking-wide text-quiz-primary font-bold cursor-pointer hover:bg-red-50/60 transition-colors"
                   >
-                    <span>Where You Might Struggle</span>
+                    <span>Blind Spots</span>
                     <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${struggleOpen ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${struggleOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
@@ -197,7 +197,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
       <div className="w-full flex justify-center mt-4 sm:mt-6">
         <button
           onClick={handleComplete}
-          className="min-h-[44px] flex items-center justify-center gap-2 px-8 py-4 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+          className="min-h-[44px] flex items-center justify-center gap-2 px-8 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
           aria-label="Mark this lesson as complete"
         >
           <CheckCircle2 size={20} />

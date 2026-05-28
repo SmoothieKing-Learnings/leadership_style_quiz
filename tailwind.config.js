@@ -22,6 +22,7 @@ export default {
       colors: {
         // Brand
         brand: '#930018',
+        'brand-dark': '#7a0014',   // hover state for any brand-red surface
         'brand-deep': '#40000F',
         'brand-bright': '#E31F26',
 
@@ -29,6 +30,8 @@ export default {
         'bg-primary': '#FFF9EF',
         'bg-light': '#FFDEE5',
         'bg-soft-blue': '#D6E0FF',
+        'interactive-cream': '#fff5e6', // selected / hover bg for option cards
+        'surface-track':     '#FFF7ED', // progress bar tracks, subtle warm surfaces
 
         // Mood tints
         'pink-light': '#FFDEE5',
@@ -44,6 +47,11 @@ export default {
         'accent-teal':   '#2A9D8F',
         'accent-gold':   '#E9C46A',
         'accent-violet': '#6A4C93',
+
+        // Error / invalid state
+        'error':       '#EF4444',
+        'error-light': '#FEF2F2',
+        'error-soft':  '#FCA5A5',
 
         // Backwards-compatible aliases (legacy class names still in use)
         'quiz-bg':       '#FFF9EF',

@@ -107,8 +107,8 @@ export default function QuizScreen({ onComplete }) {
                 onKeyDown={(e) => handleKeyDown(e, option.styleId)}
                 className={`w-full flex-1 min-h-[44px] px-3 sm:px-4 py-1.5 rounded-xl border-2 transition-all cursor-pointer shadow-sm flex items-center
                   ${isSelected
-                    ? 'border-quiz-primary bg-[#fff5e6] shadow-md ring-2 ring-quiz-primary/30'
-                    : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-[#fff5e6] hover:shadow'
+                    ? 'border-quiz-primary bg-interactive-cream shadow-md ring-2 ring-quiz-primary/30'
+                    : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-interactive-cream hover:shadow'
                   } focus:outline-none focus:ring-4 focus:ring-quiz-primary/30`}
                 aria-label={`Option ${idx + 1}: ${option.text}`}
                 aria-pressed={isSelected}
@@ -126,7 +126,7 @@ export default function QuizScreen({ onComplete }) {
           <button
             onClick={handleGoBack}
             type="button"
-            className="flex items-center gap-1 min-h-[44px] px-3 py-2 text-sm font-semibold text-quiz-primary hover:text-orange-700 hover:bg-orange-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 transition-colors whitespace-nowrap"
+            className="flex items-center gap-1 min-h-[44px] px-3 py-2 text-sm font-semibold text-quiz-primary hover:text-brand-dark hover:bg-interactive-cream rounded-lg focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 transition-colors whitespace-nowrap"
             aria-label="Go back to the previous question"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -139,10 +139,10 @@ export default function QuizScreen({ onComplete }) {
         <button
           onClick={handleContinue}
           disabled={!selectedAnswer}
-          className={`flex-1 min-h-[44px] py-3 px-4 rounded-xl font-bold text-white transition-all duration-300 shadow-lg active:scale-95
+          className={`flex-1 min-h-[44px] py-3 px-4 rounded-xl font-bold text-quiz-bg transition-all duration-300 bg-quiz-primary active:scale-95
             ${selectedAnswer
-              ? 'bg-quiz-primary hover:bg-red-800'
-              : 'bg-gray-300 cursor-not-allowed opacity-50 grayscale shadow-none hover:bg-gray-300'
+              ? 'shadow-lg hover:bg-brand-dark'
+              : 'opacity-40 cursor-not-allowed shadow-none'
             }`}
         >
           <span className="text-base">
