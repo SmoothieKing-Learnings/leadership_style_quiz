@@ -15,6 +15,9 @@ function shuffleArray(arr) {
 
 export default function QuizScreen({ onComplete }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  // 'forward' on Next, 'backward' on Back. Drives which slide-in keyframe runs
+  // on the question wrapper after the index changes. First mount runs forward.
+  const [direction, setDirection] = useState('forward');
 
   // Shuffle question order AND option order within each question once on mount.
   // The lazy initializer runs only once so the order stays stable during back-navigation.
@@ -48,11 +51,13 @@ export default function QuizScreen({ onComplete }) {
       const orderedAnswers = shuffledQuestions.map((_, idx) => answers[idx]);
       onComplete(orderedAnswers);
     } else {
+      setDirection('forward');
       setCurrentQuestionIndex(prev => prev + 1);
     }
   };
 
   const handleGoBack = () => {
+    setDirection('backward');
     setCurrentQuestionIndex(prev => prev - 1);
   };
 
@@ -71,35 +76,48 @@ export default function QuizScreen({ onComplete }) {
     <div className="w-full h-[680px] flex flex-col items-stretch text-left animate-fade-in py-2">
       <ProgressBar current={currentQuestionIndex + 1} total={shuffledQuestions.length} />
 
-      <h2
-        className="font-body text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-6 sm:mb-8"
-        aria-live="polite"
+      {/*
+        Keyed wrapper — re-mounts whenever currentQuestionIndex changes, which
+        re-runs the CSS slide-in animation. Direction picks the keyframe (slide
+        from the right on Next, from the left on Back). Progress bar + footer
+        sit outside so they stay stable across transitions.
+      */}
+      <div
+        key={currentQuestionIndex}
+        className={`flex-1 flex flex-col min-h-0 ${
+          direction === 'forward' ? 'animate-question-forward' : 'animate-question-backward'
+        }`}
       >
-        {currentQuestion.text}
-      </h2>
+        <h2
+          className="font-body text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-6 sm:mb-8"
+          aria-live="polite"
+        >
+          {currentQuestion.text}
+        </h2>
 
-      <div className="w-full flex-1 flex flex-col gap-1 min-h-0">
-        {currentQuestion.options.map((option, idx) => {
-          const isSelected = selectedAnswer === option.styleId;
-          return (
-            <div
-              key={option.id}
-              role="button"
-              tabIndex={0}
-              onClick={() => handleOptionSelect(option.styleId)}
-              onKeyDown={(e) => handleKeyDown(e, option.styleId)}
-              className={`w-full flex-1 min-h-[44px] px-3 sm:px-4 py-1.5 rounded-xl border-2 transition-all cursor-pointer shadow-sm flex items-center
-                ${isSelected
-                  ? 'border-quiz-primary bg-[#fff5e6] shadow-md ring-2 ring-quiz-primary/30'
-                  : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-[#fff5e6] hover:shadow'
-                } focus:outline-none focus:ring-4 focus:ring-quiz-primary/30`}
-              aria-label={`Option ${idx + 1}: ${option.text}`}
-              aria-pressed={isSelected}
-            >
-              <span className="text-xs sm:text-sm font-medium text-quiz-text leading-snug">{option.text}</span>
-            </div>
-          );
-        })}
+        <div className="w-full flex-1 flex flex-col gap-1 min-h-0">
+          {currentQuestion.options.map((option, idx) => {
+            const isSelected = selectedAnswer === option.styleId;
+            return (
+              <div
+                key={option.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleOptionSelect(option.styleId)}
+                onKeyDown={(e) => handleKeyDown(e, option.styleId)}
+                className={`w-full flex-1 min-h-[44px] px-3 sm:px-4 py-1.5 rounded-xl border-2 transition-all cursor-pointer shadow-sm flex items-center
+                  ${isSelected
+                    ? 'border-quiz-primary bg-[#fff5e6] shadow-md ring-2 ring-quiz-primary/30'
+                    : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-[#fff5e6] hover:shadow'
+                  } focus:outline-none focus:ring-4 focus:ring-quiz-primary/30`}
+                aria-label={`Option ${idx + 1}: ${option.text}`}
+                aria-pressed={isSelected}
+              >
+                <span className="text-xs sm:text-sm font-medium text-quiz-text leading-snug">{option.text}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Footer row: Back (if any) + Continue on a single row, pinned to the bottom */}

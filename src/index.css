@@ -23,3 +23,47 @@ body.embed-mode {
 html.embed-mode {
   background: transparent;
 }
+
+/*
+ * Question transition animations.
+ * QuizScreen wraps the question + options in a keyed div; when the key
+ * changes (Next / Back), the wrapper re-mounts and the appropriate
+ * animation runs based on direction.
+ */
+@keyframes question-slide-in-forward {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes question-slide-in-backward {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-question-forward {
+  animation: question-slide-in-forward 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-question-backward {
+  animation: question-slide-in-backward 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Honor reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-question-forward,
+  .animate-question-backward {
+    animation: none;
+  }
+}
