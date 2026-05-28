@@ -39,7 +39,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
   const isTie = topStyles.length > 1;
 
   return (
-    <div id="result-capture-area" className="w-full flex flex-col items-center animate-fade-in p-2 sm:p-4 md:p-6 rounded-2xl">
+    <div id="result-capture-area" className="w-full flex flex-col items-center animate-fade-in p-2 rounded-2xl">
       <h2 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-2">
         Your Results
       </h2>
@@ -111,7 +111,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         </div>
       </div>
 
-      <div className="w-full flex flex-col gap-3 sm:gap-6 mt-4 sm:mt-6 text-left">
+      <div className="w-full flex flex-col gap-3 mt-3 text-left">
         {topStyles.map((style) => {
           const scored = allScores.find(s => s.id === style.id);
           const defaultOpen = !isTie;
@@ -120,7 +120,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           const shineOpen = isSectionOpen(shineKey, defaultOpen);
           const struggleOpen = isSectionOpen(struggleKey, defaultOpen);
           return (
-            <div key={style.id} className="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-orange-50 overflow-hidden">
+            <div key={style.id} className="bg-white p-3 rounded-2xl shadow-sm border border-orange-50 overflow-hidden">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-1">
                 <h3 className="text-xl sm:text-2xl font-bold text-quiz-text flex items-start gap-3 min-w-0 break-words">
                   <span className="w-4 h-4 mt-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }}></span>
@@ -147,14 +147,14 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     type="button"
                     onClick={() => toggleSection(shineKey, defaultOpen)}
                     aria-expanded={shineOpen}
-                    className="w-full p-3 sm:p-4 flex items-center justify-between text-xs uppercase tracking-wide text-green-800 font-bold cursor-pointer hover:bg-green-50/60 transition-colors"
+                    className="w-full p-2.5 flex items-center justify-between text-xs uppercase tracking-wide text-green-800 font-bold cursor-pointer hover:bg-green-50/60 transition-colors"
                   >
                     <span>Where You Shine</span>
                     <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${shineOpen ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${shineOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                     <div className="overflow-hidden">
-                      <ul className="px-3 pb-3 sm:px-4 sm:pb-4 text-xs text-quiz-text/80 space-y-2 leading-snug">
+                      <ul className="px-2.5 pb-2.5 text-xs text-quiz-text/80 space-y-2 leading-snug">
                         {style.strengths.map((s, i) => (
                           <li key={i} className="leading-snug">
                             <strong className="text-quiz-text font-semibold">{s.title}: </strong>
@@ -170,14 +170,14 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     type="button"
                     onClick={() => toggleSection(struggleKey, defaultOpen)}
                     aria-expanded={struggleOpen}
-                    className="w-full p-3 sm:p-4 flex items-center justify-between text-xs uppercase tracking-wide text-quiz-primary font-bold cursor-pointer hover:bg-red-50/60 transition-colors"
+                    className="w-full p-2.5 flex items-center justify-between text-xs uppercase tracking-wide text-quiz-primary font-bold cursor-pointer hover:bg-red-50/60 transition-colors"
                   >
                     <span>Where You Might Struggle</span>
                     <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${struggleOpen ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${struggleOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                     <div className="overflow-hidden">
-                      <ul className="px-3 pb-3 sm:px-4 sm:pb-4 text-xs text-quiz-text/80 space-y-2 leading-snug">
+                      <ul className="px-2.5 pb-2.5 text-xs text-quiz-text/80 space-y-2 leading-snug">
                         {style.blindSpots.map((b, i) => (
                           <li key={i} className="leading-snug">
                             <strong className="text-quiz-text font-semibold">{b.title}: </strong>
@@ -194,7 +194,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         })}
       </div>
 
-      <div className="w-full flex justify-center mt-6 sm:mt-10">
+      <div className="w-full flex justify-center mt-4 sm:mt-6">
         <button
           onClick={handleComplete}
           className="min-h-[44px] flex items-center justify-center gap-2 px-8 py-4 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
