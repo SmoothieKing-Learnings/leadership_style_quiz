@@ -5,14 +5,15 @@ import { isEmbedded } from '../utils/iframeBridge';
  * SmoothieKing Learnings — unified landing-card chrome.
  * Keep this file identical across every project in the sk-learning repo.
  *
- *   Card width:    max-w-md  (448px)
- *   Page padding:  p-3       (12px — minimized, flat at every breakpoint)
- *   Card padding:  p-6       (24px — flat at every breakpoint)
+ *   Card width:       max-w-md       (448px)
+ *   Card min-height:  min-h-[480px]  (480px — universal floor; cards never collapse below this)
+ *   Page padding:     p-3            (12px — minimized, flat at every breakpoint)
+ *   Card padding:     p-6            (24px — flat at every breakpoint)
  *
- * Same values are mirrored inline in the thermostat game's WelcomeScreen.
- * When changing any value, mirror the edit into every other LayoutWrapper
- * AND into leadership_thermostat_game/src/components/WelcomeScreen.jsx +
- * intro/LandingStep.jsx.
+ * The card uses `flex flex-col` so the inner content can grow (`flex-1`)
+ * and vertically center (`justify-center`) when the content is shorter
+ * than the 480px minimum. Same values are mirrored inline in the
+ * thermostat game's WelcomeScreen + intro/LandingStep.
  */
 export default function LayoutWrapper({ children }) {
   const embedded = isEmbedded();
@@ -29,8 +30,9 @@ export default function LayoutWrapper({ children }) {
   }, [embedded]);
 
   if (embedded) {
-    // Embed mode: no card chrome, no fixed background — host page shows
-    // through past the content so the iframe doesn't paint a cream void.
+    // Embed mode: no card chrome, no fixed background, no min-height — the
+    // iframe host controls the outer dimensions. Host page shows through
+    // past the content so the iframe doesn't paint a cream void.
     return (
       <div className="text-quiz-text">
         <main className="w-full max-w-md mx-auto p-3">
@@ -44,8 +46,8 @@ export default function LayoutWrapper({ children }) {
 
   return (
     <div className="min-h-screen bg-quiz-bg text-quiz-text flex flex-col items-center justify-center p-3">
-      <main className="w-full max-w-md bg-white/50 backdrop-blur-sm rounded-2xl shadow-xl border border-orange-100 overflow-hidden relative">
-        <div className="p-6 flex flex-col items-center text-center">
+      <main className="w-full max-w-md min-h-[480px] bg-white/50 backdrop-blur-sm rounded-2xl shadow-xl border border-orange-100 overflow-hidden relative flex flex-col">
+        <div className="p-6 flex-1 flex flex-col items-center justify-center text-center">
           {children}
         </div>
       </main>
