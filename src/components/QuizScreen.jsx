@@ -34,7 +34,7 @@ export default function QuizScreen({ onComplete }) {
 
   useEffect(() => {
     announceToScreenReader(`Question ${currentQuestionIndex + 1} of ${shuffledQuestions.length}: ${currentQuestion.text}`);
-  }, [currentQuestionIndex, currentQuestion]);
+  }, [currentQuestionIndex, currentQuestion, shuffledQuestions.length]);
 
   const handleOptionSelect = (styleId) => {
     setAnswers({ ...answers, [currentQuestionIndex]: styleId });
@@ -63,18 +63,22 @@ export default function QuizScreen({ onComplete }) {
     }
   };
 
+  // h-[680px] locks the QuizScreen to a fixed 680px tall card across every
+  // question, so the footer never jumps as option counts/lengths vary.
+  // The options container takes flex-1 + min-h-0 and each option inside
+  // also takes flex-1, so options share leftover vertical space evenly.
   return (
-    <div className="w-full flex flex-col items-center animate-fade-in text-left">
+    <div className="w-full h-[680px] flex flex-col items-stretch text-left animate-fade-in py-2">
       <ProgressBar current={currentQuestionIndex + 1} total={shuffledQuestions.length} />
 
       <h2
-        className="text-sm sm:text-base md:text-lg font-bold text-quiz-text w-full mb-3 sm:mb-4 leading-snug"
+        className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-6 sm:mb-8"
         aria-live="polite"
       >
         {currentQuestion.text}
       </h2>
 
-      <div className="w-full flex flex-col gap-2 sm:gap-2.5">
+      <div className="w-full flex-1 flex flex-col gap-1 sm:gap-2 min-h-0">
         {currentQuestion.options.map((option, idx) => {
           const isSelected = selectedAnswer === option.styleId;
           return (
@@ -84,7 +88,7 @@ export default function QuizScreen({ onComplete }) {
               tabIndex={0}
               onClick={() => handleOptionSelect(option.styleId)}
               onKeyDown={(e) => handleKeyDown(e, option.styleId)}
-              className={`w-full min-h-[44px] p-2.5 sm:p-3 md:p-4 rounded-xl border-2 transition-all cursor-pointer shadow-sm
+              className={`w-full flex-1 min-h-[44px] px-3 sm:px-4 py-2 rounded-xl border-2 transition-all cursor-pointer shadow-sm flex items-center
                 ${isSelected
                   ? 'border-quiz-primary bg-[#fff5e6] shadow-md ring-2 ring-quiz-primary/30'
                   : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-[#fff5e6] hover:shadow'
@@ -92,49 +96,42 @@ export default function QuizScreen({ onComplete }) {
               aria-label={`Option ${idx + 1}: ${option.text}`}
               aria-pressed={isSelected}
             >
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <span
-                  className={`flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 transition-all
-                    ${isSelected
-                      ? 'border-quiz-primary bg-quiz-primary'
-                      : 'border-orange-200 bg-transparent'
-                    }`}
-                  aria-hidden="true"
-                />
-                <span className="text-xs sm:text-sm md:text-base font-medium text-quiz-text leading-snug">{option.text}</span>
-              </div>
+              <span className="text-sm sm:text-base font-medium text-quiz-text">{option.text}</span>
             </div>
           );
         })}
       </div>
 
-      <button
-        onClick={handleContinue}
-        disabled={!selectedAnswer}
-        className={`w-full mt-3 sm:mt-5 py-2.5 sm:py-3 md:py-4 px-6 rounded-xl font-bold text-white transition-all duration-300 shadow-lg scale-[1.00] active:scale-95
-          ${selectedAnswer
-            ? 'bg-quiz-primary hover:bg-red-800'
-            : 'bg-gray-300 cursor-not-allowed opacity-50 grayscale shadow-none hover:bg-gray-300'
-          }`}
-      >
-        <span className="text-sm sm:text-base">
-          {isLastQuestion ? 'See My Results' : 'Next Question'}
-        </span>
-      </button>
+      {/* Footer row: Back (if any) + Continue on a single row, pinned to the bottom */}
+      <div className="w-full pt-3 flex items-center gap-2 sm:gap-3">
+        {currentQuestionIndex > 0 && (
+          <button
+            onClick={handleGoBack}
+            type="button"
+            className="flex items-center gap-1 min-h-[44px] px-3 py-2 text-sm font-semibold text-quiz-primary hover:text-orange-700 hover:bg-orange-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 transition-colors whitespace-nowrap"
+            aria-label="Go back to the previous question"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back
+          </button>
+        )}
 
-      {currentQuestionIndex > 0 && (
         <button
-          onClick={handleGoBack}
-          className="mt-2 sm:mt-3 flex items-center gap-1.5 text-[11px] sm:text-xs text-quiz-primary hover:text-orange-700 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 rounded-lg px-2 py-1 sm:px-3 sm:py-1.5 hover:bg-orange-50"
-          aria-label="Go back to the previous question"
+          onClick={handleContinue}
+          disabled={!selectedAnswer}
+          className={`flex-1 min-h-[44px] py-3 px-4 rounded-xl font-bold text-white transition-all duration-300 shadow-lg active:scale-95
+            ${selectedAnswer
+              ? 'bg-quiz-primary hover:bg-red-800'
+              : 'bg-gray-300 cursor-not-allowed opacity-50 grayscale shadow-none hover:bg-gray-300'
+            }`}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Back to previous question
+          <span className="text-base">
+            {isLastQuestion ? 'See My Leadership Style' : 'Next Question'}
+          </span>
         </button>
-      )}
+      </div>
     </div>
   );
 }
-
