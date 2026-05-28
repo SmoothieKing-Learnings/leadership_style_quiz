@@ -28,7 +28,7 @@ export const QUESTIONS = [
   },
   {
     id: 'q3',
-    text: 'You notice a team member consistently stands around on their phone during down-time instead of wiping down counters. How do you handle it?',
+    text: 'You notice a team member consistently stands around on their phone during down-time. How do you handle it?',
     options: [
       { id: 'q3-teacher', text: 'I grab the daily cleaning checklist, and walk them back through the technical standard and the "why" behind sanitation.', styleId: 'teacher' },
       { id: 'q3-role_model', text: 'I start wiping the messy counter myself so they see the exact standard in action.', styleId: 'role_model' },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ProgressBar from './ProgressBar';
 import { QUESTIONS } from '../data/questionsData';
 import { announceToScreenReader } from '../skills/a11yUtils';
@@ -72,13 +72,13 @@ export default function QuizScreen({ onComplete }) {
       <ProgressBar current={currentQuestionIndex + 1} total={shuffledQuestions.length} />
 
       <h2
-        className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-6 sm:mb-8"
+        className="font-body text-lg sm:text-xl md:text-2xl font-bold text-quiz-text w-full leading-snug mb-6 sm:mb-8"
         aria-live="polite"
       >
         {currentQuestion.text}
       </h2>
 
-      <div className="w-full flex-1 flex flex-col gap-1 sm:gap-2 min-h-0">
+      <div className="w-full flex-1 flex flex-col gap-1 min-h-0">
         {currentQuestion.options.map((option, idx) => {
           const isSelected = selectedAnswer === option.styleId;
           return (
@@ -88,7 +88,7 @@ export default function QuizScreen({ onComplete }) {
               tabIndex={0}
               onClick={() => handleOptionSelect(option.styleId)}
               onKeyDown={(e) => handleKeyDown(e, option.styleId)}
-              className={`w-full flex-1 min-h-[44px] px-3 sm:px-4 py-2 rounded-xl border-2 transition-all cursor-pointer shadow-sm flex items-center
+              className={`w-full flex-1 min-h-[44px] px-3 sm:px-4 py-1.5 rounded-xl border-2 transition-all cursor-pointer shadow-sm flex items-center
                 ${isSelected
                   ? 'border-quiz-primary bg-[#fff5e6] shadow-md ring-2 ring-quiz-primary/30'
                   : 'border-orange-100 bg-white hover:border-quiz-primary hover:bg-[#fff5e6] hover:shadow'
@@ -96,7 +96,7 @@ export default function QuizScreen({ onComplete }) {
               aria-label={`Option ${idx + 1}: ${option.text}`}
               aria-pressed={isSelected}
             >
-              <span className="text-sm sm:text-base font-medium text-quiz-text">{option.text}</span>
+              <span className="text-sm sm:text-base font-medium text-quiz-text leading-snug">{option.text}</span>
             </div>
           );
         })}

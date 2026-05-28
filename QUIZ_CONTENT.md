@@ -38,7 +38,7 @@ Each question presents one option per style. Option order is shuffled at runtime
 - **The Supporter** — I quickly look at everyone's energy levels, give everyone a quick "We've got this," and jump in wherever someone looks most overwhelmed.
 
 ### Question 3
-**You notice a team member consistently stands around on their phone during down-time instead of wiping down counters. How do you handle it?**
+**You notice a team member consistently stands around on their phone during down-time. How do you handle it?**
 
 - **The Teacher** — I grab the daily cleaning checklist, and walk them back through the technical standard and the "why" behind sanitation.
 - **The Role Model** — I start wiping the messy counter myself so they see the exact standard in action.

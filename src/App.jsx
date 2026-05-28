@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import LayoutWrapper from './components/LayoutWrapper';
 import WelcomeScreen from './components/WelcomeScreen';
 import QuizScreen from './components/QuizScreen';

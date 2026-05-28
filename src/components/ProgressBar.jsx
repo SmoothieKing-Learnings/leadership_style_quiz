@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function ProgressBar({ current, total }) {
   const percentage = Math.round((current / total) * 100);
 
