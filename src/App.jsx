@@ -3,7 +3,12 @@ import LayoutWrapper from './components/LayoutWrapper';
 import WelcomeScreen from './components/WelcomeScreen';
 import QuizScreen from './components/QuizScreen';
 import ResultsScreen from './components/ResultsScreen';
+import TieBreakerScreen from './components/TieBreakerScreen';
 import { calculateResults } from './skills/calculateResults';
+import {
+  findTieBreakerCandidates,
+  MAX_TIE_BREAKER_ATTEMPTS,
+} from './skills/tieBreaker';
 import { STYLES } from './data/stylesData';
 import { emit, emitComplete, reportSize, onCommand } from './utils/iframeBridge';
 
@@ -11,18 +16,89 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState('welcome');
   const [resultsData, setResultsData] = useState(null);
 
+  // Tie-breaker context. Set when calculateResults returns multiple top
+  // styles AND qualifying non-tied-pick candidates exist. Cleared when the
+  // tie-breaker resolves (single top style) OR the attempt budget runs out.
+  //   {
+  //     answers:           string[]     mutable across attempts
+  //     shuffledQuestions: Question[]   QuizScreen's local shuffle, passed up
+  //     attemptIdx:        number       0..MAX-1
+  //     usedCandidates:    Set<number>  question indices already used
+  //   }
+  const [tieBreakerCtx, setTieBreakerCtx] = useState(null);
+
   const startQuiz = useCallback(() => {
     setCurrentScreen('quiz');
   }, []);
 
-  const handleQuizComplete = useCallback((answers) => {
+  // Helper: decide where to route given a candidate `results` payload.
+  // Either to 'tieBreaker' (with context) or directly to 'results'.
+  const finalizeOrTieBreak = useCallback((answers, shuffledQuestions, attemptIdx, usedCandidates) => {
     const results = calculateResults(answers, STYLES);
-    setResultsData(results);
-    setCurrentScreen('results');
+    const isTied = results.topStyles.length > 1;
+
+    if (!isTied) {
+      setResultsData(results);
+      setTieBreakerCtx(null);
+      setCurrentScreen('results');
+      return;
+    }
+
+    // Cap reached — show Hybrid.
+    if (attemptIdx >= MAX_TIE_BREAKER_ATTEMPTS) {
+      setResultsData(results);
+      setTieBreakerCtx(null);
+      setCurrentScreen('results');
+      return;
+    }
+
+    // Tie + budget left — check for candidates.
+    const tiedIds = new Set(results.topStyles.map(s => s.id));
+    const pool = findTieBreakerCandidates(answers, tiedIds, usedCandidates);
+    if (pool.length === 0) {
+      // No qualifying candidates — accept Hybrid.
+      setResultsData(results);
+      setTieBreakerCtx(null);
+      setCurrentScreen('results');
+      return;
+    }
+
+    // Enter / continue the tie-breaker.
+    setTieBreakerCtx({
+      answers,
+      shuffledQuestions,
+      tiedStyleIds: tiedIds,
+      attemptIdx,
+      usedCandidates,
+    });
+    setCurrentScreen('tieBreaker');
   }, []);
+
+  const handleQuizComplete = useCallback((answers, shuffledQuestions) => {
+    finalizeOrTieBreak(answers, shuffledQuestions, 0, new Set());
+  }, [finalizeOrTieBreak]);
+
+  const handleTieBreakerAttempt = useCallback((newAnswers, newUsedCandidates) => {
+    if (!tieBreakerCtx) return;
+    finalizeOrTieBreak(
+      newAnswers,
+      tieBreakerCtx.shuffledQuestions,
+      tieBreakerCtx.attemptIdx + 1,
+      newUsedCandidates,
+    );
+  }, [tieBreakerCtx, finalizeOrTieBreak]);
+
+  const handleNoCandidates = useCallback(() => {
+    if (!tieBreakerCtx) return;
+    const results = calculateResults(tieBreakerCtx.answers, STYLES);
+    setResultsData(results);
+    setTieBreakerCtx(null);
+    setCurrentScreen('results');
+  }, [tieBreakerCtx]);
 
   const restartQuiz = useCallback(() => {
     setResultsData(null);
+    setTieBreakerCtx(null);
     setCurrentScreen('welcome');
   }, []);
 
@@ -108,6 +184,18 @@ function App() {
     <LayoutWrapper>
       {currentScreen === 'welcome' && <WelcomeScreen onStart={startQuiz} />}
       {currentScreen === 'quiz' && <QuizScreen onComplete={handleQuizComplete} />}
+      {currentScreen === 'tieBreaker' && tieBreakerCtx && (
+        <TieBreakerScreen
+          key={`tb-${tieBreakerCtx.attemptIdx}`}
+          answers={tieBreakerCtx.answers}
+          shuffledQuestions={tieBreakerCtx.shuffledQuestions}
+          tiedStyleIds={tieBreakerCtx.tiedStyleIds}
+          attemptIdx={tieBreakerCtx.attemptIdx}
+          usedCandidates={tieBreakerCtx.usedCandidates}
+          onAttemptComplete={handleTieBreakerAttempt}
+          onNoCandidates={handleNoCandidates}
+        />
+      )}
       {currentScreen === 'results' && resultsData && (
         <ResultsScreen resultsData={resultsData} onRestart={restartQuiz} />
       )}

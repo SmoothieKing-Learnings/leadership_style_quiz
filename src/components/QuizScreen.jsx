@@ -47,9 +47,11 @@ export default function QuizScreen({ onComplete }) {
     if (!selectedAnswer) return;
 
     if (isLastQuestion) {
-      // Convert object to ordered array of styleIds before sending to results
+      // Convert object to ordered array of styleIds before sending to results.
+      // Also pass shuffledQuestions so the tie-breaker can re-render a chosen
+      // question in the same option order the user originally saw.
       const orderedAnswers = shuffledQuestions.map((_, idx) => answers[idx]);
-      onComplete(orderedAnswers);
+      onComplete(orderedAnswers, shuffledQuestions);
     } else {
       setDirection('forward');
       setCurrentQuestionIndex(prev => prev + 1);

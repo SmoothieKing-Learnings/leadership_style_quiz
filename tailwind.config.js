@@ -65,6 +65,11 @@ export default {
       borderRadius: {
         pill: '999px',
       },
+      boxShadow: {
+        // Chart tooltip drop shadow — matches Tailwind shadow-md, named so
+        // Recharts inline-style blocks can reference a documented token.
+        'chart-tooltip': '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+      },
     },
   },
   plugins: [],

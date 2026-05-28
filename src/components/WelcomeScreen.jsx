@@ -16,7 +16,7 @@ export default function WelcomeScreen({ onStart }) {
 
       {/* Element 2 — headline (rises from below) */}
       <motion.h1
-        className="font-heading text-2xl md:text-4xl font-extrabold text-quiz-primary mb-6 tracking-tight"
+        className="font-heading text-3xl md:text-5xl font-extrabold text-quiz-primary mb-6 tracking-tight"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.20, duration: 0.45 }}

@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { CheckCircle2, ChevronDown } from 'lucide-react';
+import { ChevronDown, Share2, RotateCcw } from 'lucide-react';
 import { announceToScreenReader } from '../skills/a11yUtils';
-import { emitComplete } from '../utils/iframeBridge';
+import { exportAndShare } from '../skills/exportAndShare';
+
+// Strip the "The " prefix from style names so the one-row legend stays
+// readable at 9px on a mobile viewport (Leadership subtitles are too long
+// to fit four-across with `flex-nowrap`, so the trimmed name is used here).
+const legendLabel = (name) => name.replace(/^The\s+/i, '');
 
 export default function ResultsScreen({ resultsData, onRestart }) {
   const { allScores, topStyles } = resultsData;
@@ -12,176 +16,210 @@ export default function ResultsScreen({ resultsData, onRestart }) {
     announceToScreenReader(`Quiz complete. Your primary style is ${styleNames}.`);
   }, [topStyles]);
 
-  const handleComplete = () => {
-    emitComplete();
-    onRestart();
-  };
-
+  // Single accordion per detail tile — one toggle reveals BOTH the full
+  // "Where You Might Shine" and "Where You Might Struggle" prose blocks.
   const [openSections, setOpenSections] = useState({});
-  const isSectionOpen = (key, defaultOpen) =>
-    openSections[key] !== undefined ? openSections[key] : defaultOpen;
-  const toggleSection = (key, defaultOpen) => {
-    setOpenSections(prev => {
-      const current = prev[key] !== undefined ? prev[key] : defaultOpen;
-      return { ...prev, [key]: !current };
-    });
+  const isOpen = (key) => !!openSections[key];
+  const toggleSection = (key) => {
+    setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Sorted high → low so the dominant style sits at the leading edge of the
+  // stacked bar and the legend reads dominant → recessive. Percentages sum
+  // to 100 (±1 from rounding).
   const chartData = useMemo(() => {
-    return allScores.filter(s => s.score > 0).map(s => ({
-      name: s.name,
-      value: s.score,
-      color: s.color
-    }));
+    return [...allScores]
+      .sort((a, b) => b.score - a.score)
+      .map(s => ({
+        name: s.name,
+        subtitle: s.subtitle,
+        percentage: s.percentage,
+        score: s.score,
+        maxPossible: s.maxPossible,
+        color: s.color,
+      }));
   }, [allScores]);
 
-  const sortedScores = useMemo(() => [...allScores].sort((a, b) => b.score - a.score), [allScores]);
   const isTie = topStyles.length > 1;
 
-  return (
-    <div id="result-capture-area" className="w-full flex flex-col items-center animate-fade-in p-2 rounded-2xl">
-      <h2 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-2">
-        Your Results
-      </h2>
-      {isTie ? (
-        <h1 className="font-heading text-3xl md:text-5xl font-black text-quiz-text mb-2 text-center">
-          You are a Hybrid Leader
-        </h1>
-      ) : (
-        <h1 className="font-heading text-3xl md:text-5xl font-black text-quiz-text mb-2 text-center">
-          {topStyles[0].name}
-        </h1>
-      )}
-      {isTie && (
-        <p className="text-base font-medium text-quiz-text/80 mb-6 text-center">
-          Your primary styles are {topStyles.map(s => <strong key={s.id} className="text-quiz-primary">{s.name}</strong>).reduce((prev, curr) => [prev, ' and ', curr])}
-        </p>
-      )}
+  const handleShare = () => {
+    exportAndShare('result-capture-area', 'leadership-style-result.png');
+  };
 
-      <div className="w-full grid grid-cols-2 gap-4 mt-4 sm:mt-6">
+  return (
+    <div className="w-full flex flex-col items-center animate-fade-in">
+      {/*
+        CAPTURE AREA — everything between this opening div and its close is
+        rendered into the share-as-image PNG via html2canvas. The action
+        buttons below live outside it so the screenshot stays focused on
+        the result content itself.
+      */}
+      <div id="result-capture-area" className="w-full flex flex-col items-center p-2 rounded-2xl">
+        {/* Kicker */}
+        <h2 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest">
+          Your Results
+        </h2>
+
+        {/*
+          PROPORTIONAL STACKED BAR
+          Single horizontal bar = 100% of answers, segments per style sized by
+          `flex: percentage`. Zero-score styles are filtered out (legend below
+          still lists them). minWidth: 4px keeps very small (1–3%) segments
+          visible as a thin sliver instead of collapsing.
+          `animate-bar-fill` reveals the bar from the left after the rest of
+          the header has rendered (keyframes in src/index.css).
+        */}
         <div
-          className="h-40 sm:h-48 flex justify-center items-center"
-          aria-label={`Donut chart showing score breakdown. Highest scores are ${topStyles.map(s=>s.name).join(', ')}.`}
+          className="w-full h-8 mt-2 flex bg-surface-track rounded-full overflow-hidden shadow-sm animate-bar-fill"
           role="img"
+          aria-label={`Score breakdown. ${chartData.map(s => `${s.subtitle} ${s.percentage} percent`).join(', ')}.`}
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx="50%"
-                cy="50%"
-                innerRadius="38%"
-                outerRadius="78%"
-                paddingAngle={4}
-                dataKey="value"
-                stroke="none"
-              >
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value, name) => [`${value} pts`, name]}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', padding: '6px 10px' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          {chartData.filter(s => s.percentage > 0).map((s) => (
+            <div
+              key={s.name}
+              className="h-full"
+              style={{
+                flex: s.percentage,
+                backgroundColor: s.color,
+                minWidth: '4px',
+              }}
+              title={`${s.subtitle}: ${s.percentage}% (${s.score}/${s.maxPossible} pts)`}
+            />
+          ))}
         </div>
 
-        <div className="flex flex-col gap-2 justify-center text-left">
-          {sortedScores.map((style) => (
-            <div key={style.id}>
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }} />
-                  <span className="font-semibold text-quiz-text text-xs truncate">{style.name}</span>
-                </div>
-                <span className="text-xs font-bold text-quiz-text/70 tabular-nums ml-2">
-                  {style.score}/{style.maxPossible}
-                </span>
-              </div>
-              <div className="w-full h-1.5 bg-surface-track rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-700 ease-out"
-                  style={{ width: `${style.percentage}%`, backgroundColor: style.color }}
-                />
-              </div>
+        {/*
+          LEGEND — one row, nowrap. Uses the trimmed style name (see legendLabel)
+          because the full subtitles ("Servant/Secure Base Leadership" etc.) are
+          too long to fit four-across at 9px on a 375px viewport.
+        */}
+        <div className="w-full flex flex-nowrap justify-center gap-x-3 mt-2 text-[9px]">
+          {chartData.filter(s => s.percentage > 0).map((s) => (
+            <div key={s.name} className="flex items-center gap-[0.1rem]">
+              <span
+                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: s.color }}
+                aria-hidden="true"
+              />
+              <span className="font-semibold text-quiz-text">{legendLabel(s.name)}</span>
+              <span className="text-quiz-text/60">{s.percentage}%</span>
             </div>
           ))}
         </div>
-      </div>
 
-      <div className="w-full flex flex-col gap-3 mt-3 text-left">
-        {topStyles.map((style) => {
-          const scored = allScores.find(s => s.id === style.id);
-          const defaultOpen = !isTie;
-          const shineKey = `${style.id}-shine`;
-          const struggleKey = `${style.id}-struggle`;
-          const shineOpen = isSectionOpen(shineKey, defaultOpen);
-          const struggleOpen = isSectionOpen(struggleKey, defaultOpen);
-          return (
-            <div key={style.id} className="bg-white p-3 rounded-2xl shadow-sm border border-orange-100 overflow-hidden">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-1">
-                <h3 className="text-xl sm:text-2xl font-bold text-quiz-text flex items-start gap-3 min-w-0 break-words">
-                  <span className="w-4 h-4 mt-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }}></span>
-                  <span className="min-w-0 break-words">{style.name}</span>
-                </h3>
-                {scored && (
-                  <span className="self-start flex-shrink-0 text-xs font-bold px-3 py-1 rounded-full text-quiz-bg whitespace-nowrap"
-                    style={{ backgroundColor: style.color }}>
-                    {scored.score}/{scored.maxPossible} pts
-                  </span>
-                )}
-              </div>
-              <p className="text-xs font-bold text-quiz-text/60 uppercase tracking-wide mb-4 mt-1">
-                {style.subtitle}
-              </p>
+        {/* H1 — single style name, or compact "Hybrid Leader" label in a tie */}
+        {isTie ? (
+          <h1 className="font-heading text-xs font-black text-quiz-text mt-6 mb-2 text-center">
+            You are a Hybrid Leader
+          </h1>
+        ) : (
+          <h1 className="font-heading text-3xl font-black text-quiz-text mt-6 mb-2 text-center">
+            {topStyles[0].name}
+          </h1>
+        )}
 
-              <div className="text-sm mb-4">
-                <strong className="text-quiz-primary">Focus:</strong> <span className="text-quiz-text/90">{style.focus}</span>
-              </div>
+        {/*
+          Detail tile(s) — bare wrapper, no chrome. In a tie, two (or more)
+          tiles stack with gap-8 for breathing room since there's no
+          background to separate them.
+        */}
+        <div className={`w-full flex flex-col text-left ${isTie ? 'gap-8' : ''}`}>
+          {topStyles.map((style) => {
+            const accordionKey = `${style.id}-full`;
+            const open = isOpen(accordionKey);
+            return (
+              <div key={style.id}>
+                {/* Approach / Focus — centered, 12px, deep brown, stacked on two lines */}
+                <div className="text-xs text-center mb-4 text-quiz-text space-y-0.5">
+                  <div>
+                    <strong className="text-quiz-text">Approach:</strong>{' '}
+                    <span className="text-quiz-text/80">{style.subtitle}</span>
+                  </div>
+                  <div>
+                    <strong className="text-quiz-text">Focus:</strong>{' '}
+                    <span className="text-quiz-text/80">{style.focus}</span>
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-green-50/50 rounded-xl border border-green-100 overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => toggleSection(shineKey, defaultOpen)}
-                    aria-expanded={shineOpen}
-                    className="w-full p-2.5 flex items-center justify-between text-xs uppercase tracking-wide text-green-800 font-bold cursor-pointer hover:bg-green-50/60 transition-colors"
-                  >
-                    <span>Strengths</span>
-                    <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${shineOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${shineOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-                    <div className="overflow-hidden">
-                      <ul className="px-2.5 pb-2.5 text-xs text-quiz-text/80 space-y-2 leading-snug">
+                {/*
+                  Strengths + Blind Spots — concise summary. Hides
+                  completely when the full-description accordion opens
+                  (max-height collapses to 0, opacity fades, and the
+                  element becomes invisible to assistive tech). Uses
+                  max-h-[600px] as a generous ceiling so the open height
+                  animates from 0 → content height; the actual rendered
+                  height is whatever the content needs, not 600px.
+                */}
+                <div
+                  className={`overflow-hidden transition-[max-height,opacity,visibility] duration-300 ease-out ${open ? 'max-h-0 opacity-0 invisible' : 'max-h-[600px] opacity-100 visible'}`}
+                  aria-hidden={open}
+                >
+                  <div className="flex flex-col gap-3">
+                    <div className="flex gap-3">
+                      <strong className="w-28 flex-shrink-0 text-base uppercase text-green-800">Strengths</strong>
+                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-1 flex-1">
                         {style.strengths.map((s, i) => (
-                          <li key={i} className="leading-snug">
-                            <strong className="text-quiz-text font-semibold">{s.title}: </strong>
-                            <span>{s.description}</span>
-                          </li>
+                          <li key={i}>{s.title}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="flex gap-3">
+                      <strong className="w-28 flex-shrink-0 text-base uppercase text-quiz-primary">Blind Spots</strong>
+                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-1 flex-1">
+                        {style.blindSpots.map((b, i) => (
+                          <li key={i}>{b.title}</li>
                         ))}
                       </ul>
                     </div>
                   </div>
                 </div>
-                <div className="bg-red-50/50 rounded-xl border border-red-100 overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => toggleSection(struggleKey, defaultOpen)}
-                    aria-expanded={struggleOpen}
-                    className="w-full p-2.5 flex items-center justify-between text-xs uppercase tracking-wide text-quiz-primary font-bold cursor-pointer hover:bg-red-50/60 transition-colors"
-                  >
-                    <span>Blind Spots</span>
-                    <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${struggleOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${struggleOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-                    <div className="overflow-hidden">
-                      <ul className="px-2.5 pb-2.5 text-xs text-quiz-text/80 space-y-2 leading-snug">
+
+                {/* Single accordion toggle — reveals both full descriptions */}
+                <button
+                  type="button"
+                  onClick={() => toggleSection(accordionKey)}
+                  aria-expanded={open}
+                  aria-controls={`${accordionKey}-content`}
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-quiz-primary hover:underline focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 rounded"
+                >
+                  <span>{open ? 'Hide full description' : 'Show full description'}</span>
+                  <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${open ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/*
+                  Expanded content — labels sit ABOVE their lists (vertical
+                  stack) instead of side-by-side, because the description
+                  prose is substantial and would compress awkwardly in the
+                  narrow right column of the side-by-side pattern.
+                  Mirrors the summary's hide/show pattern: max-height
+                  collapses to 0 + opacity fades + invisible swaps the
+                  reachability. max-h-[1200px] is a generous ceiling for
+                  the longer prose content.
+                */}
+                <div
+                  id={`${accordionKey}-content`}
+                  className={`overflow-hidden transition-[max-height,opacity,visibility] duration-300 ease-out ${open ? 'max-h-[1200px] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}
+                  aria-hidden={!open}
+                >
+                  <div className="flex flex-col gap-4 mt-3">
+                    <div>
+                      <strong className="block mb-2 text-base uppercase text-green-800">Where You Might Shine</strong>
+                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-2">
+                        {style.strengths.map((s, i) => (
+                          <li key={i}>
+                            <span className="font-bold">{s.title}.</span>{' '}
+                            <span className="leading-relaxed">{s.description}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <strong className="block mb-2 text-base uppercase text-quiz-primary">Where You Might Struggle</strong>
+                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-2">
                         {style.blindSpots.map((b, i) => (
-                          <li key={i} className="leading-snug">
-                            <strong className="text-quiz-text font-semibold">{b.title}: </strong>
-                            <span>{b.description}</span>
+                          <li key={i}>
+                            <span className="font-bold">{b.title}.</span>{' '}
+                            <span className="leading-relaxed">{b.description}</span>
                           </li>
                         ))}
                       </ul>
@@ -189,19 +227,33 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
-      <div className="w-full flex justify-center mt-4 sm:mt-6">
+      {/*
+        ACTION BUTTONS — outside the capture area so they don't appear in
+        the shared/saved PNG. Share triggers exportAndShare (Web Share API
+        with download fallback); Retake routes back to the welcome screen.
+        `emitComplete()` for the Rise 360 host has already been fired in
+        App.jsx when the results screen mounted, so no need to refire here.
+      */}
+      <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-4 sm:mt-6">
         <button
-          onClick={handleComplete}
-          className="min-h-[44px] flex items-center justify-center gap-2 px-8 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
-          aria-label="Mark this lesson as complete"
+          onClick={handleShare}
+          className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+          aria-label="Share or download my result image"
         >
-          <CheckCircle2 size={20} />
-          Complete
+          <Share2 size={20} /> Share Result
+        </button>
+
+        <button
+          onClick={onRestart}
+          className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-white text-quiz-primary border-2 border-quiz-primary rounded-xl font-bold text-base hover:bg-interactive-cream focus:outline-none focus:ring-4 focus:ring-quiz-primary/30 transition-all active:scale-95"
+          aria-label="Retake the quiz"
+        >
+          <RotateCcw size={20} /> Retake Quiz
         </button>
       </div>
     </div>
