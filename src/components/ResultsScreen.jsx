@@ -44,11 +44,11 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         Your Results
       </span>
       {isTie ? (
-        <h1 className="text-lg sm:text-xl md:text-2xl font-black text-quiz-text text-center leading-tight">
+        <h1 className="font-heading text-lg sm:text-xl md:text-2xl font-black text-quiz-text text-center leading-tight">
           You are a Hybrid Leader
         </h1>
       ) : (
-        <h1 className="text-lg sm:text-xl md:text-2xl font-black text-quiz-text text-center leading-tight">
+        <h1 className="font-heading text-lg sm:text-xl md:text-2xl font-black text-quiz-text text-center leading-tight">
           {topStyles[0].name}
         </h1>
       )}
