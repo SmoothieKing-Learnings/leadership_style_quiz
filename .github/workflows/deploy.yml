@@ -44,7 +44,9 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_BASE_PATH: /Leadership_Quiz_Prototype/
+          # Must match the GitHub repository name so Pages serves assets from
+          # https://<owner>.github.io/<repo>/. Update if the repo is renamed.
+          VITE_BASE_PATH: /leadership_style_quiz/
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact

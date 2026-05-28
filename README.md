@@ -14,8 +14,9 @@ Configured via Tailwind CSS with a warm palette constraint:
 - **Chart Colors**: Four distinct complementary colors (`#F4A261`, `#E76F51`, `#2A9D8F`, `#E9C46A`) assigned structurally in the codebase for easy editing.
 
 ### Deployment Context
-- Configured specifically for **GitHub Pages** (via standard URL like `username.github.io/Leadership_Quiz_Prototype`).
-- **Base Pathing**: Setup in `vite.config.js` to ensure assets avoid 404 errors.
+- Hosted on **GitHub Pages** at https://smoothieking-learnings.github.io/leadership_style_quiz/.
+- Published automatically via GitHub Actions (`.github/workflows/deploy.yml`) on every push to `main`.
+- **Base Pathing**: `vite.config.js` reads `VITE_BASE_PATH` (set by the workflow to `/leadership_style_quiz/`) so assets resolve under the Pages sub-path. Local dev falls back to `./`.
 - **Routing**: Employs static React state-based rendering (`currentScreen`) to completely bypass `react-router-dom` 404 errors standard to static site refreshes.
 
 ## Tech Stack
@@ -69,4 +70,13 @@ Utility wrapper that bridges `html2canvas` to process a DOM ID into an image blo
 3. **Run Testing Suite:** `npm run test`
 4. **Build Production Bundle:** `npm run build`
 
-> _Note: For GitHub Pages deployment, execute `npm run build` and follow standard GitHub actions configuration protocols to host the generated `/dist` build output statically._
+## Publishing
+
+Pushes to `main` are built and deployed to GitHub Pages by `.github/workflows/deploy.yml`. To bootstrap the published site on a fresh repository:
+
+1. In GitHub → **Settings → Pages**, set **Source** to **GitHub Actions**.
+2. In **Settings → Actions → General**, ensure workflows are allowed to run.
+3. Make the repository **Public** under **Settings → General → Danger Zone → Change visibility** (required for free GitHub Pages).
+4. Push to `main` (or trigger the workflow manually from the Actions tab). The live URL appears in the workflow's `deploy` job summary.
+
+If the repo is renamed, update `VITE_BASE_PATH` in `.github/workflows/deploy.yml` to match the new name so Pages can resolve assets.
