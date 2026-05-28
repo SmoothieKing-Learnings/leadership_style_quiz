@@ -4,15 +4,22 @@ import { X } from 'lucide-react';
 /**
  * OtherTypesModal
  *
- * Surfaced from the results screen when the user taps "Explore the other
- * types →". Shows every style the user's top result did NOT include — so
- * in a tie, the tied top styles are excluded too. Each entry renders as
- * dot + name + 2–3 sentence `summary` paragraph.
+ * Surfaced from the results screen when the user taps the quiet
+ * "Explore the other types →" footer link. Shows every style the user's top
+ * result did NOT include — so in a tie, the tied top styles are excluded too.
  *
- * Dismissal:
- *   • Backdrop click
- *   • Close (X) button in the top-right of the card
- *   • Escape key
+ * Visual aesthetic notes:
+ *   • Card uses the page cream (`bg-quiz-bg`) instead of pure white so it
+ *     blends with the rest of the screen — the modal reads as a paused
+ *     extension of the page, not a stark white intrusion.
+ *   • No drop shadow — keeps the chrome quiet against the cream backdrop.
+ *   • Generous header padding (`pt-10 pb-4`) for breathing room.
+ *   • Each style is separated by a `border-orange-100` hairline; the
+ *     coloured dots from the earlier version are gone.
+ *   • Bottom gradient (cream → transparent) hints at scroll overflow on
+ *     long lists without overlaying content too aggressively.
+ *
+ * Dismissal: backdrop click, close (X) button, Escape key.
  *
  * Hide the trigger button entirely when there are zero "other" types
  * (rare full-tie case — handled by the caller, not this component).
@@ -38,55 +45,46 @@ export default function OtherTypesModal({
   }, [allStyles, topStyles]);
 
   // Defensive: don't render the modal if the others list is empty.
-  // The caller should already hide the trigger in this case.
   if (others.length === 0) return null;
 
   return (
     <div
-      className="fixed inset-0 z-30 flex items-center justify-center p-4 bg-quiz-bg/90 animate-tie-backdrop"
+      className="fixed inset-0 z-30 flex items-start justify-center p-4 bg-quiz-bg/90 animate-tie-backdrop"
       role="dialog"
       aria-modal="true"
       aria-labelledby="other-types-title"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md max-h-[88vh] flex flex-col bg-white rounded-2xl shadow-xl border border-orange-100 animate-tie-card"
+        className="relative w-full max-w-md max-h-full flex flex-col bg-quiz-bg rounded-2xl animate-tie-card overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close X — absolute, top-right of the card */}
+        {/* Close X — sits above content via z-10 since the gradient overlay also lives in this card */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full text-quiz-text/60 hover:text-quiz-text hover:bg-interactive-cream focus:outline-none focus:ring-4 focus:ring-quiz-primary/30 transition-colors"
+          className="absolute top-0 right-4 z-10 w-9 h-9 flex items-center justify-center rounded-full text-quiz-text/60 hover:text-quiz-text hover:bg-interactive-cream focus:outline-none focus:ring-4 focus:ring-quiz-primary/30 transition-colors"
           aria-label="Close"
         >
           <X size={20} />
         </button>
 
-        {/* Header */}
-        <div className="px-6 pt-6 pb-2 text-center">
-          <p className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-2">
+        {/* Header — eyebrow only; H2 removed per design feedback */}
+        <div className="px-8 py-3 text-center border-b border-orange-100">
+          <p
+            id="other-types-title"
+            className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest"
+          >
             More to explore
           </p>
-          <h2
-            id="other-types-title"
-            className="font-heading text-2xl font-black text-quiz-text leading-tight"
-          >
-            The Other Types
-          </h2>
         </div>
 
-        {/* Scrollable body */}
-        <div className="px-6 pb-6 pt-2 overflow-y-auto flex flex-col gap-5">
+        {/* Scrollable body — hairline dividers between styles, no coloured dots */}
+        <div className="px-8 pb-8 overflow-y-auto divide-y divide-orange-100">
           {others.map((style) => (
-            <div key={style.id} className="text-left">
-              <h3 className="font-heading text-lg font-bold text-quiz-text flex items-start gap-2 mb-2">
-                <span
-                  className="w-3 h-3 mt-1.5 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: style.color }}
-                  aria-hidden="true"
-                />
-                <span>{style.name}</span>
+            <div key={style.id} className="text-left py-5 first:pt-2">
+              <h3 className="font-heading text-lg font-bold text-quiz-text mb-2">
+                {style.name}
               </h3>
               <p className="text-sm text-quiz-text/80 leading-relaxed">
                 {style.summary || style.description}
@@ -94,6 +92,12 @@ export default function OtherTypesModal({
             </div>
           ))}
         </div>
+
+        {/* Bottom overflow hint — cream fade pinned to the card's bottom edge */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none bg-gradient-to-t from-quiz-bg via-quiz-bg/80 to-transparent"
+          aria-hidden="true"
+        />
       </div>
     </div>
   );
