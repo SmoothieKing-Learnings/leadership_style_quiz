@@ -39,28 +39,28 @@ export default function ResultsScreen({ resultsData, onRestart }) {
   const isTie = topStyles.length > 1;
 
   return (
-    <div id="result-capture-area" className="w-full flex flex-col items-center animate-fade-in">
-      <span className="text-[10px] font-extrabold text-quiz-primary uppercase tracking-widest">
+    <div id="result-capture-area" className="w-full flex flex-col items-center animate-fade-in p-2 sm:p-4 md:p-6 rounded-2xl">
+      <h2 className="text-xs font-extrabold text-quiz-primary uppercase tracking-widest mb-2">
         Your Results
-      </span>
+      </h2>
       {isTie ? (
-        <h1 className="font-heading text-lg sm:text-xl md:text-2xl font-black text-quiz-text text-center leading-tight">
+        <h1 className="font-heading text-3xl md:text-5xl font-black text-quiz-text mb-2 text-center">
           You are a Hybrid Leader
         </h1>
       ) : (
-        <h1 className="font-heading text-lg sm:text-xl md:text-2xl font-black text-quiz-text text-center leading-tight">
+        <h1 className="font-heading text-3xl md:text-5xl font-black text-quiz-text mb-2 text-center">
           {topStyles[0].name}
         </h1>
       )}
       {isTie && (
-        <p className="text-[11px] sm:text-xs text-quiz-text/80 text-center mt-0.5">
-          {topStyles.map(s => <strong key={s.id} className="text-quiz-primary">{s.name}</strong>).reduce((prev, curr) => [prev, ' & ', curr])}
+        <p className="text-base font-medium text-quiz-text/80 mb-6 text-center">
+          Your primary styles are {topStyles.map(s => <strong key={s.id} className="text-quiz-primary">{s.name}</strong>).reduce((prev, curr) => [prev, ' and ', curr])}
         </p>
       )}
 
-      <div className="w-full grid grid-cols-2 gap-2 sm:gap-3 mt-2 sm:mt-3">
+      <div className="w-full grid grid-cols-2 gap-4 mt-4 sm:mt-6">
         <div
-          className="h-32 sm:h-40 flex justify-center items-center"
+          className="h-40 sm:h-48 flex justify-center items-center"
           aria-label={`Donut chart showing score breakdown. Highest scores are ${topStyles.map(s=>s.name).join(', ')}.`}
           role="img"
         >
@@ -88,19 +88,19 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           </ResponsiveContainer>
         </div>
 
-        <div className="flex flex-col gap-1 sm:gap-1.5 justify-center text-left">
+        <div className="flex flex-col gap-2 justify-center text-left">
           {sortedScores.map((style) => (
             <div key={style.id}>
-              <div className="flex items-center justify-between mb-0.5">
-                <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
-                  <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }} />
-                  <span className="font-semibold text-quiz-text text-[10px] sm:text-[11px] truncate">{style.name}</span>
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }} />
+                  <span className="font-semibold text-quiz-text text-xs truncate">{style.name}</span>
                 </div>
-                <span className="text-[9px] sm:text-[10px] font-bold text-quiz-text/70 tabular-nums ml-1.5">
+                <span className="text-xs font-bold text-quiz-text/70 tabular-nums ml-2">
                   {style.score}/{style.maxPossible}
                 </span>
               </div>
-              <div className="w-full h-1 sm:h-1.5 bg-orange-50 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-orange-50 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-out"
                   style={{ width: `${style.percentage}%`, backgroundColor: style.color }}
@@ -111,7 +111,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         </div>
       </div>
 
-      <div className="w-full flex flex-col gap-2 mt-2 sm:mt-3 text-left">
+      <div className="w-full flex flex-col gap-3 sm:gap-6 mt-4 sm:mt-6 text-left">
         {topStyles.map((style) => {
           const scored = allScores.find(s => s.id === style.id);
           const defaultOpen = !isTie;
@@ -120,38 +120,41 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           const shineOpen = isSectionOpen(shineKey, defaultOpen);
           const struggleOpen = isSectionOpen(struggleKey, defaultOpen);
           return (
-            <div key={style.id} className="bg-white p-2.5 sm:p-3 rounded-xl border border-orange-50">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <h3 className="text-xs sm:text-sm font-bold text-quiz-text flex flex-col min-w-0">
-                  <span className="truncate">{style.name}</span>
-                  <span className="text-[9px] sm:text-[10px] font-semibold text-quiz-text/60 uppercase tracking-wide">{style.subtitle}</span>
+            <div key={style.id} className="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-orange-50 overflow-hidden">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-quiz-text flex items-start gap-3 min-w-0 break-words">
+                  <span className="w-4 h-4 mt-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: style.color }}></span>
+                  <span className="min-w-0 break-words">{style.name}</span>
                 </h3>
                 {scored && (
-                  <span className="flex-shrink-0 text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full text-white"
+                  <span className="self-start flex-shrink-0 text-xs font-bold px-3 py-1 rounded-full text-white whitespace-nowrap"
                     style={{ backgroundColor: style.color }}>
-                    {scored.score}/{scored.maxPossible}
+                    {scored.score}/{scored.maxPossible} pts
                   </span>
                 )}
               </div>
+              <p className="text-xs font-bold text-quiz-text/60 uppercase tracking-wide mb-4 mt-1">
+                {style.subtitle}
+              </p>
 
-              <div className="text-[10px] sm:text-[11px] mb-1.5 sm:mb-2">
+              <div className="text-sm mb-4">
                 <strong className="text-quiz-primary">Focus:</strong> <span className="text-quiz-text/90">{style.focus}</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <div className="bg-green-50/50 rounded-lg border border-green-100 overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-green-50/50 rounded-xl border border-green-100 overflow-hidden">
                   <button
                     type="button"
                     onClick={() => toggleSection(shineKey, defaultOpen)}
                     aria-expanded={shineOpen}
-                    className="w-full p-2 sm:p-2.5 flex items-center justify-between text-[9px] sm:text-[10px] uppercase tracking-wide text-green-800 font-bold cursor-pointer hover:bg-green-50/60 transition-colors"
+                    className="w-full p-3 sm:p-4 flex items-center justify-between text-xs uppercase tracking-wide text-green-800 font-bold cursor-pointer hover:bg-green-50/60 transition-colors"
                   >
                     <span>Where You Shine</span>
-                    <ChevronDown size={12} className={`transition-transform duration-300 ease-out ${shineOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${shineOpen ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${shineOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                     <div className="overflow-hidden">
-                      <ul className="px-2 pb-2 sm:px-2.5 sm:pb-2.5 text-[10px] sm:text-[11px] text-quiz-text/80 space-y-1 sm:space-y-1.5">
+                      <ul className="px-3 pb-3 sm:px-4 sm:pb-4 text-xs text-quiz-text/80 space-y-2 leading-snug">
                         {style.strengths.map((s, i) => (
                           <li key={i} className="leading-snug">
                             <strong className="text-quiz-text font-semibold">{s.title}: </strong>
@@ -162,19 +165,19 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     </div>
                   </div>
                 </div>
-                <div className="bg-red-50/50 rounded-lg border border-red-100 overflow-hidden">
+                <div className="bg-red-50/50 rounded-xl border border-red-100 overflow-hidden">
                   <button
                     type="button"
                     onClick={() => toggleSection(struggleKey, defaultOpen)}
                     aria-expanded={struggleOpen}
-                    className="w-full p-2 sm:p-2.5 flex items-center justify-between text-[9px] sm:text-[10px] uppercase tracking-wide text-quiz-primary font-bold cursor-pointer hover:bg-red-50/60 transition-colors"
+                    className="w-full p-3 sm:p-4 flex items-center justify-between text-xs uppercase tracking-wide text-quiz-primary font-bold cursor-pointer hover:bg-red-50/60 transition-colors"
                   >
                     <span>Where You Might Struggle</span>
-                    <ChevronDown size={12} className={`transition-transform duration-300 ease-out ${struggleOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown size={14} className={`transition-transform duration-300 ease-out ${struggleOpen ? 'rotate-180' : ''}`} />
                   </button>
                   <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${struggleOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
                     <div className="overflow-hidden">
-                      <ul className="px-2 pb-2 sm:px-2.5 sm:pb-2.5 text-[10px] sm:text-[11px] text-quiz-text/80 space-y-1 sm:space-y-1.5">
+                      <ul className="px-3 pb-3 sm:px-4 sm:pb-4 text-xs text-quiz-text/80 space-y-2 leading-snug">
                         {style.blindSpots.map((b, i) => (
                           <li key={i} className="leading-snug">
                             <strong className="text-quiz-text font-semibold">{b.title}: </strong>
@@ -191,14 +194,13 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         })}
       </div>
 
-      <div className="w-full flex justify-center mt-2 sm:mt-3">
+      <div className="w-full flex justify-center mt-6 sm:mt-10">
         <button
           onClick={handleComplete}
-          className="min-h-[40px] sm:min-h-[44px] flex items-center justify-center gap-1.5 sm:gap-2 px-6 sm:px-8 py-2 sm:py-2.5 bg-quiz-primary text-[#FFF9EF] rounded-lg font-bold text-xs sm:text-sm hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+          className="min-h-[44px] flex items-center justify-center gap-2 px-8 py-4 bg-quiz-primary text-[#FFF9EF] rounded-xl font-bold text-base hover:bg-[#7a0014] focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
           aria-label="Mark this lesson as complete"
         >
-          <CheckCircle2 size={14} className="sm:hidden" />
-          <CheckCircle2 size={16} className="hidden sm:inline" />
+          <CheckCircle2 size={20} />
           Complete
         </button>
       </div>
