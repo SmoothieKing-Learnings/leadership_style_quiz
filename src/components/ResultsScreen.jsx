@@ -250,7 +250,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         `emitComplete()` for the Rise 360 host has already been fired in
         App.jsx when the results screen mounted, so no need to refire here.
       */}
-      <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-4 sm:mt-6">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-4 sm:mt-6">
         <button
           onClick={handleShare}
           className="flex-1 max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
