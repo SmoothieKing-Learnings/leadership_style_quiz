@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, Share2, RotateCcw } from 'lucide-react';
+import { ChevronDown, ExternalLink, Share2, RotateCcw } from 'lucide-react';
 import { announceToScreenReader } from '../skills/a11yUtils';
-import { exportAndShare } from '../skills/exportAndShare';
+import { exportAndShare, QUIZ_URL } from '../skills/exportAndShare';
+import { isEmbedded } from '../utils/iframeBridge';
 import OtherTypesModal from './OtherTypesModal';
 import { STYLES } from '../data/stylesData';
 
@@ -54,6 +55,36 @@ export default function ResultsScreen({ resultsData, onRestart }) {
 
   const handleShare = () => {
     exportAndShare('result-capture-area', 'leadership-style-result.png');
+  };
+
+  // Inside an iframe (notably Rise 360), `navigator.share()` and the
+  // <a download> fallback both silently fail. We swap the Share button for
+  // "Open to share", which opens the canonical live URL in a new top-level
+  // tab with the user's scores encoded — the new tab rehydrates the Results
+  // screen (see App.jsx) and its own Share button works normally there.
+  const embedded = isEmbedded();
+  const [openStatus, setOpenStatus] = useState('idle');
+  const handleOpenToShare = () => {
+    const scoresParam = allScores
+      .filter(s => s.score > 0)
+      .map(s => `${s.id}:${s.score}`)
+      .join(',');
+    const params = new URLSearchParams();
+    if (scoresParam) params.set('scores', scoresParam);
+    const target = `${QUIZ_URL}?${params.toString()}`;
+    // Note: deliberately NOT passing 'noopener,noreferrer' as the third
+    // argument because that forces window.open to return null, which would
+    // mask popup-block failures. Instead, get the window reference, detect
+    // block via null check, then manually strip opener. Same-origin (the new
+    // tab loads QUIZ_URL on the same host as this iframe), so the strip is
+    // reliable here.
+    const newWindow = window.open(target, '_blank');
+    if (newWindow) {
+      try { newWindow.opener = null; } catch (_) { /* cross-origin guard */ }
+      setOpenStatus('opened');
+    } else {
+      setOpenStatus('blocked');
+    }
   };
 
   return (
@@ -251,13 +282,23 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         App.jsx when the results screen mounted, so no need to refire here.
       */}
       <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-4 sm:mt-6">
-        <button
-          onClick={handleShare}
-          className="w-full max-w-[280px] sm:flex-1 sm:max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
-          aria-label="Share or download my result image"
-        >
-          <Share2 size={20} /> Share Result
-        </button>
+        {embedded ? (
+          <button
+            onClick={handleOpenToShare}
+            className="w-full max-w-[280px] sm:flex-1 sm:max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+            aria-label="Open the quiz in a new tab to share your result"
+          >
+            <ExternalLink size={20} /> Open to share
+          </button>
+        ) : (
+          <button
+            onClick={handleShare}
+            className="w-full max-w-[280px] sm:flex-1 sm:max-w-xs min-h-[44px] flex items-center justify-center gap-2 px-6 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-md active:scale-95"
+            aria-label="Share or download my result image"
+          >
+            <Share2 size={20} /> Share Result
+          </button>
+        )}
 
         <button
           onClick={onRestart}
@@ -267,6 +308,37 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           <RotateCcw size={20} /> Retake Quiz
         </button>
       </div>
+
+      {/*
+        Status message for the iframe "Open to share" handoff. Persistent
+        (no auto-dismiss) so the participant has time to find the new tab.
+        Cleared automatically when the component unmounts (e.g. Retake Quiz).
+      */}
+      {embedded && openStatus === 'opened' && (
+        <p
+          role="status"
+          aria-live="polite"
+          className="mt-3 text-xs sm:text-sm text-quiz-text/70 text-center max-w-md mx-auto px-2"
+        >
+          We&apos;ve opened your result in a new tab. Switch to it to share.
+        </p>
+      )}
+      {embedded && openStatus === 'blocked' && (
+        <p
+          role="status"
+          aria-live="polite"
+          className="mt-3 text-xs sm:text-sm text-quiz-primary text-center max-w-md mx-auto px-2"
+        >
+          Your browser blocked the new tab.{' '}
+          <button
+            type="button"
+            onClick={handleOpenToShare}
+            className="underline font-bold hover:no-underline focus:outline-none focus:ring-2 focus:ring-quiz-primary/40 rounded px-1"
+          >
+            Try again
+          </button>
+        </p>
+      )}
 
       {/*
         "Explore the other types →" footer link — quiet, low-priority

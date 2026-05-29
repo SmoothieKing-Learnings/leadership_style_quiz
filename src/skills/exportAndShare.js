@@ -1,5 +1,12 @@
 import html2canvas from 'html2canvas';
 
+// Canonical public URL of the quiz. Pinned so the share message always
+// directs recipients to the live GitHub Pages site, regardless of whether
+// the share is triggered from local dev, the live site, or a Rise 360 iframe.
+// Exported so the iframe "Open to share" button on ResultsScreen can build
+// the rehydration URL (`?scores=…`) against the same canonical host.
+export const QUIZ_URL = 'https://smoothieking-learnings.github.io/leadership_style_quiz/';
+
 export const exportAndShare = async (elementId, filename = 'leadership-style-result.png') => {
   const element = document.getElementById(elementId);
   if (!element) {
@@ -29,7 +36,10 @@ export const exportAndShare = async (elementId, filename = 'leadership-style-res
         try {
           await navigator.share({
             title: 'My Leadership Style',
-            text: 'Check out my Leadership Style Profile!',
+            // Appended to the text only — passing it as the `url` field
+            // alongside the same link in `text` causes some receivers to
+            // render the link twice (once inline, once as a preview card).
+            text: `Check out my Leadership Style Profile! ${QUIZ_URL}`,
             files: [file]
           });
           return;

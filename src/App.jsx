@@ -10,6 +10,7 @@ import {
   MAX_TIE_BREAKER_ATTEMPTS,
 } from './skills/tieBreaker';
 import { STYLES } from './data/stylesData';
+import { QUESTIONS } from './data/questionsData';
 import { emit, emitComplete, reportSize, onCommand } from './utils/iframeBridge';
 
 function App() {
@@ -100,6 +101,59 @@ function App() {
     setResultsData(null);
     setTieBreakerCtx(null);
     setCurrentScreen('welcome');
+  }, []);
+
+  // Rehydrate the Results screen from URL params on first mount. Used by the
+  // iframe "Open to share" button on ResultsScreen — it opens the canonical
+  // live URL with `?scores=<id>:<n>,<id>:<n>` so the new top-level tab lands
+  // on the exact same Results state without making the user retake the quiz.
+  // After rehydration we strip the params so a refresh resets to Welcome and
+  // the address bar stays clean. (This project has no participant name capture,
+  // so the `name` param from the reference is omitted.)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const scoresParam = params.get('scores');
+    if (!scoresParam) return;
+
+    const scoreMap = {};
+    scoresParam.split(',').forEach(pair => {
+      const [id, scoreStr] = pair.split(':');
+      const score = parseInt(scoreStr, 10);
+      if (id && Number.isFinite(score) && score >= 0) {
+        scoreMap[id] = score;
+      }
+    });
+
+    const knownIds = new Set(STYLES.map(s => s.id));
+    if (!Object.keys(scoreMap).some(id => knownIds.has(id))) return;
+
+    const totalQuestions = QUESTIONS.length;
+    const allScores = STYLES.map(style => {
+      const score = scoreMap[style.id] || 0;
+      return {
+        ...style,
+        score,
+        percentage: Math.round((score / totalQuestions) * 100),
+        maxPossible: totalQuestions,
+      };
+    });
+
+    let maxScore = -1;
+    let topStyles = [];
+    allScores.forEach(s => {
+      if (s.score > maxScore) {
+        maxScore = s.score;
+        topStyles = [s];
+      } else if (s.score === maxScore) {
+        topStyles.push(s);
+      }
+    });
+
+    setResultsData({ allScores, topStyles });
+    setTieBreakerCtx(null);
+    setCurrentScreen('results');
+
+    window.history.replaceState({}, '', window.location.pathname);
   }, []);
 
   // Mount: announce ready, report size, honor ?autostart=1
