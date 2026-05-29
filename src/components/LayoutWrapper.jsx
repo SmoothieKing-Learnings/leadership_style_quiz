@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { isEmbedded } from '../utils/iframeBridge';
 
 /*
  * SmoothieKing Learnings — unified landing-card chrome.
  * Keep this file identical across every project in the sk-learning repo.
  *
- *   Card width:       max-w-md       (448px)
+ *   Card width:       max-w-[620px]  (620px max — phones use full available width with the 12px page padding)
  *   Card min-height:  min-h-[480px]  (480px — universal floor; cards never collapse below this)
  *   Page padding:     p-3            (12px — minimized, flat at every breakpoint)
  *   Card padding:     p-6            (24px — flat at every breakpoint)
@@ -35,7 +35,7 @@ export default function LayoutWrapper({ children }) {
     // past the content so the iframe doesn't paint a cream void.
     return (
       <div className="text-quiz-text">
-        <main className="w-full max-w-md mx-auto p-3">
+        <main className="w-full max-w-[620px] mx-auto p-3">
           <div className="flex flex-col items-center text-center">
             {children}
           </div>
@@ -46,7 +46,7 @@ export default function LayoutWrapper({ children }) {
 
   return (
     <div className="min-h-screen bg-quiz-bg text-quiz-text flex flex-col items-center justify-center p-3">
-      <main className="w-full max-w-md min-h-[480px] bg-white/50 backdrop-blur-sm rounded-2xl shadow-xl border border-orange-100 overflow-hidden relative flex flex-col">
+      <main className="w-full max-w-[620px] min-h-[480px] bg-white/50 backdrop-blur-sm rounded-2xl shadow-xl border border-orange-100 overflow-hidden relative flex flex-col">
         <div className="p-6 flex-1 flex flex-col items-center justify-center text-center">
           {children}
         </div>

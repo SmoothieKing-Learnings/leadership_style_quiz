@@ -49,14 +49,14 @@ export default function OtherTypesModal({
 
   return (
     <div
-      className="fixed inset-0 z-30 flex items-start justify-center p-4 bg-quiz-bg/90 animate-tie-backdrop"
+      className="fixed inset-0 z-30 flex items-start justify-center p-3 bg-quiz-bg/90 animate-tie-backdrop"
       role="dialog"
       aria-modal="true"
       aria-labelledby="other-types-title"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md max-h-full flex flex-col bg-quiz-bg rounded-2xl animate-tie-card overflow-hidden"
+        className="relative w-full max-w-[620px] max-h-full flex flex-col bg-quiz-bg rounded-2xl animate-tie-card overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close X — sits above content via z-10 since the gradient overlay also lives in this card */}
