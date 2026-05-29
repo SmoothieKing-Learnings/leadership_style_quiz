@@ -30,21 +30,21 @@ Paste into a Rise 360 **Embed block** (not the Custom Code Block — they're dif
 <iframe
   src="https://smoothieking-learnings.github.io/leadership_style_quiz/?embed=1"
   width="100%"
-  height="780"
+  height="700"
   style="border:0; display:block; width:100%;"
   scrolling="auto"
   title="Leadership Style Quiz"
   allow="autoplay"></iframe>
 ```
 
-**Why 780px?** It sits under the in-app `@media (max-height: 800px)` compressed-layout breakpoint, so content fits without forcing internal scroll. Tune up to 1300 if you prefer mobile fit over desktop chrome balance.
+**Why 700px?** It sits 50px under Articulate Rise 360's default 750px **Code Block** height cap (see §10), and comfortably accommodates the quiz's internal content stack (640px QuizScreen + 16px page padding = 656px). Bump to 720px if you don't need Code Block headroom; bump further (up to ~1100px) only if you're using an Embed block where the cap is lazier — content will just bottom-anchor with breathing room.
 
 ### 2.2 Origin-locked, fixed height (recommended for live Rise lessons)
 
 ```html
 <iframe
   src="https://smoothieking-learnings.github.io/leadership_style_quiz/?embed=1&parentOrigin=https%3A%2F%2Frise.articulate.com"
-  width="100%" height="780"
+  width="100%" height="700"
   style="border:0; display:block; width:100%;" scrolling="auto"
   title="Leadership Style Quiz" allow="autoplay"></iframe>
 ```
@@ -98,7 +98,7 @@ When you want scroll over the embed to flow into the Rise lesson, set `pointer-e
 <style>
   #app-wrap { position: relative; width: 100%; }
   #app-wrap iframe {
-    display: block; width: 100%; height: 780px; border: 0;
+    display: block; width: 100%; height: 700px; border: 0;
     pointer-events: none;
     transition: filter 200ms;
     filter: saturate(0.85);
@@ -120,7 +120,7 @@ When you want scroll over the embed to flow into the Rise lesson, set `pointer-e
   #app-wrap.engaged #app-overlay { opacity: 0; pointer-events: none; }
 
   @media (max-width: 520px) {
-    #app-wrap iframe { height: 90vh; max-height: 1150px; min-height: 600px; }
+    #app-wrap iframe { height: 90vh; max-height: 720px; min-height: 600px; }
   }
 </style>
 
@@ -308,6 +308,7 @@ Deprecated attribute, no effect on wheel capture in modern browsers. Use the cli
 
 | Constraint | Implication |
 | --- | --- |
+| **Code Block height cap = 750px** | Articulate Rise 360 caps **Code Blocks** at 750px tall by default. Anything taller is clipped at the bottom. Recommended iframe height is **700px** — gives 50px headroom for Articulate's internal Code Block chrome. The QuizScreen inside the iframe is pinned to `h-[640px]` and the LayoutWrapper uses `p-2` in embed mode, so the total content stack is 656px — comfortably under 700. **Embed blocks** do not appear to share this cap. |
 | **Iframe height is one fixed value** | Cannot be different per device with a single iframe. Use the dual-block pattern in §2.4 if your Rise plan exposes per-device visibility. |
 | **Rise mobile preview ≠ real mobile** | Mobile preview is a visual clip in a desktop browser. Responsive CSS won't change behavior between Rise's preview modes — only on real devices or DevTools (see §11). |
 | **Sandboxed download blocked** | `html2canvas` → file download silently fails inside Rise. The "Share Result" button works only when the quiz is loaded standalone (outside Rise). |

@@ -33,9 +33,12 @@ export default function LayoutWrapper({ children }) {
     // Embed mode: no card chrome, no fixed background, no min-height — the
     // iframe host controls the outer dimensions. Host page shows through
     // past the content so the iframe doesn't paint a cream void.
+    // Page padding is p-2 (8px) instead of the standalone p-3 (12px) to
+    // squeeze a bit more vertical budget out of Articulate Rise 360's 750px
+    // Code Block height cap — see QuizScreen.jsx for the full math.
     return (
       <div className="text-quiz-text">
-        <main className="w-full max-w-[620px] mx-auto p-3">
+        <main className="w-full max-w-[620px] mx-auto p-2">
           <div className="flex flex-col items-center text-center">
             {children}
           </div>
