@@ -44,15 +44,16 @@ export default function WelcomeScreen({ onStart }) {
         Take this short assessment to uncover your primary style, strengths, and blind spots as a leader.
       </motion.p>
 
-      {/* Element 5 — CTAs block */}
+      {/* Element 5 — CTAs block (full-width to match the other quizzes' welcome pages) */}
       <motion.div
+        className="w-full"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.50, duration: 0.40 }}
       >
         <button
           onClick={onStart}
-          className="min-h-[44px] min-w-[44px] px-8 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-lg hover:shadow-xl active:scale-95"
+          className="w-full min-h-[44px] px-8 py-4 bg-quiz-primary text-quiz-bg rounded-xl font-bold text-base hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-quiz-primary/50 transition-all shadow-lg hover:shadow-xl active:scale-95"
           aria-label="Start the Leadership Style Quiz"
         >
           Let's Blend!
