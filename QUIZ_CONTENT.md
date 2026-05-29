@@ -57,9 +57,9 @@ Each question presents one option per style. Option order is shuffled at runtime
 **A guest is visibly stressed because they're in a massive hurry, and they're complaining their smoothie taste is off. What do you do?**
 
 - **The Teacher** — I quickly double check the prep date on the fruit and the blender settings to make sure everything is working correctly.
-- **The Role Model** — I step in right away, own the mistake with a genuine apology, and remake the drink while my team watches how I handle it.
+- **The Role Model** — I step in right away, own the mistake with a genuine apology, and remake the smoothie while my team watches how I handle it.
 - **The Coach** — I let the team member handle the remake, then use the windshield view afterward to ask, "How do you think that went? What would you try differently next time?"
-- **The Supporter** — I make sure my team member is okay first, help handle the guest's frustration, and we remake the drink together as a team.
+- **The Supporter** — I make sure my team member is okay first, help handle the guest's frustration, and we remake the smoothie together as a team.
 
 ### Question 6
 **Your team is exhausted and morale is slipping. How do you show them you care?**

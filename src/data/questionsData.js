@@ -51,9 +51,9 @@ export const QUESTIONS = [
     text: 'A guest is visibly stressed because they\'re in a massive hurry, and they\'re complaining their smoothie taste is off. What do you do?',
     options: [
       { id: 'q5-teacher', text: 'I quickly double check the prep date on the fruit and the blender settings to make sure everything is working correctly.', styleId: 'teacher' },
-      { id: 'q5-role_model', text: 'I step in right away, own the mistake with a genuine apology, and remake the drink while my team watches how I handle it.', styleId: 'role_model' },
+      { id: 'q5-role_model', text: 'I step in right away, own the mistake with a genuine apology, and remake the smoothie while my team watches how I handle it.', styleId: 'role_model' },
       { id: 'q5-coach', text: 'I let the team member handle the remake, then use the windshield view afterward to ask, "How do you think that went? What would you try differently next time?"', styleId: 'coach' },
-      { id: 'q5-supporter', text: 'I make sure my team member is okay first, help handle the guest\'s frustration, and we remake the drink together as a team.', styleId: 'supporter' }
+      { id: 'q5-supporter', text: 'I make sure my team member is okay first, help handle the guest\'s frustration, and we remake the smoothie together as a team.', styleId: 'supporter' }
     ]
   },
   {
