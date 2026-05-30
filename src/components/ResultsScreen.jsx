@@ -234,12 +234,12 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                   narrow right column of the side-by-side pattern.
                   Mirrors the summary's hide/show pattern: max-height
                   collapses to 0 + opacity fades + invisible swaps the
-                  reachability. max-h-[1200px] is a generous ceiling for
-                  the longer prose content.
+                  reachability. max-h-[1800px] is a generous ceiling for
+                  the three-block prose content (Shine + Struggle + Grow).
                 */}
                 <div
                   id={`${accordionKey}-content`}
-                  className={`overflow-hidden transition-[max-height,opacity,visibility] duration-300 ease-out ${open ? 'max-h-[1200px] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}
+                  className={`overflow-hidden transition-[max-height,opacity,visibility] duration-300 ease-out ${open ? 'max-h-[1800px] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}
                   aria-hidden={!open}
                 >
                   <div className="flex flex-col gap-4 mt-3">
@@ -265,6 +265,25 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                         ))}
                       </ul>
                     </div>
+                    {/*
+                      How to Grow — third block, forward-looking guidance.
+                      Defensive optional chaining: older styles may not have
+                      a howToGrow array yet; an empty / missing array hides
+                      the block entirely.
+                    */}
+                    {style.howToGrow?.length > 0 && (
+                      <div>
+                        <strong className="block mb-2 text-base uppercase text-quiz-text">How to Grow</strong>
+                        <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-2">
+                          {style.howToGrow.map((g, i) => (
+                            <li key={i}>
+                              <span className="font-bold">{g.title}.</span>{' '}
+                              <span className="leading-relaxed">{g.description}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -272,6 +291,46 @@ export default function ResultsScreen({ resultsData, onRestart }) {
           })}
         </div>
 
+      </div>
+
+      {/*
+        CLOSING REFLECTION — outside the capture area, so the shared PNG
+        stays focused on the personalized result. Two general-purpose
+        sections (same content for every result) intended as on-page
+        reading material before the participant takes the next action.
+      */}
+      <div className="w-full mt-6 text-left">
+        <h3 className="font-heading text-lg font-bold text-quiz-text mb-3">
+          What to do with what you just learned
+        </h3>
+        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+          You might be feeling a little exposed right now. Maybe you saw yourself clearly in one of those blind spots for the first time. Maybe you realized the thing you thought was your strength has been quietly working against you on certain shifts.
+        </p>
+        <p className="text-sm font-semibold text-quiz-text leading-relaxed mb-3">
+          That&apos;s exactly where growth starts.
+        </p>
+        <p className="text-sm text-quiz-text/80 leading-relaxed">
+          Your default style isn&apos;t something to fix. It&apos;s something to build from. Leadership isn&apos;t a label, it&apos;s a choice you make every time you step onto the floor. The goal isn&apos;t to abandon what comes naturally. It&apos;s to recognize the moment it stops serving your team and have the courage to reach for something different.
+        </p>
+
+        <h3 className="font-heading text-lg font-bold text-quiz-text mt-6 mb-3">
+          Building the habit of flexibility
+        </h3>
+        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+          The floor is always giving you signals. Learning to read them is the real skill underneath all four styles. Three habits will help you build that muscle:
+        </p>
+        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+          <strong className="font-bold text-quiz-text">The pre-shift scan.</strong> Before the doors open, take thirty seconds to read the room. Who looks tired? Who is stepping into something new this week? You won&apos;t always get it right. But the habit of asking changes how you show up.
+        </p>
+        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+          <strong className="font-bold text-quiz-text">The mid-rush check.</strong> When things get heavy, ask yourself one question: is what I&apos;m doing right now helping my team or adding to the pressure? It doesn&apos;t take long. It just takes honesty.
+        </p>
+        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+          <strong className="font-bold text-quiz-text">The post-shift reflection.</strong> Think back to one moment where you leaned too hard into your default and hit a blind spot. Write it down. Name what you&apos;d do differently. Carry it into your next shift.
+        </p>
+        <p className="text-sm text-quiz-text/80 leading-relaxed">
+          Expanding your range feels like writing with your non-dominant hand at first. It will feel unnatural. Do it anyway. Your team doesn&apos;t need you to feel comfortable. They need you to be the leader they need in that exact moment.
+        </p>
       </div>
 
       {/*

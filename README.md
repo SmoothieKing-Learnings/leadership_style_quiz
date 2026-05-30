@@ -29,7 +29,7 @@ Question and answer copy is documented in [QUIZ_CONTENT.md](QUIZ_CONTENT.md). Sc
 
 - **Welcome.** A branded intro and a single "Let's Blend!" call to action.
 - **Quiz.** Seven shift scenarios presented one at a time with a progress bar and a clear "Continue" gate.
-- **Results.** Headline with the leader's primary style, donut chart of how their answers distributed across the four styles, the dedicated strengths / blind-spots panel for their top style.
+- **Results.** Headline with the leader's primary style, a proportional stacked bar showing how their answers distributed across the four styles, and a dedicated strengths / blind-spots / growth panel for their top style.
 - **Share.** A one-tap option that captures the result card via `html2canvas` and uses the device's native share sheet on mobile, with a clean image download fallback in browsers that don't support Web Share.
 
 Nothing is stored, transmitted, or sent anywhere — the quiz runs entirely in the browser.
@@ -97,7 +97,7 @@ Full embed snippets, sizing guidance, and Rise 360 gotchas live in [IFRAME_EMBED
 
 - **React 18** on Vite
 - **Tailwind CSS** locked to the SmoothieKing Learnings design tokens
-- **Recharts** for the results donut chart
+- **framer-motion** for Welcome-screen entrance animations
 - **html2canvas** for the results screenshot
 - **lucide-react** for icons
 - **@axe-core/react** for dev-time accessibility auditing
