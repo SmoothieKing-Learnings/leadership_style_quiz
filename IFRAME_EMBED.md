@@ -83,7 +83,7 @@ If your Rise plan exposes "Hide on mobile" / "Hide on desktop" toggles on the Em
 <!-- Mobile block (set "Hide on desktop" in Rise) -->
 <iframe
   src="https://smoothieking-learnings.github.io/leadership_style_quiz/?embed=1"
-  width="100%" height="1150"
+  width="100%" height="720"
   style="border:0; display:block; width:100%;" scrolling="auto"
   title="Leadership Style Quiz" allow="autoplay"></iframe>
 ```
@@ -154,6 +154,55 @@ When you want scroll over the embed to flow into the Rise lesson, set `pointer-e
 For the cleanest, most native-feeling embed: replicate the quiz's welcome card inside the Code Block, drop the iframe behind it with `pointer-events: none`, and post `leadershipQuiz:start` when the learner clicks **Let's Blend!**. Pass `?autostart=1` so the iframe skips its own welcome the moment it becomes interactive.
 
 The full markup for this **Pattern C** is in section 5 of [`RISE360_INTEGRATION_GUIDE.md`](./RISE360_INTEGRATION_GUIDE.md) — too long to inline here, but a copy-paste affair. Substitute `myApp` → `leadershipQuiz` in the markup.
+
+### 2.7 Code Block — scroll-eavesdrop (no engagement gesture)
+
+The cleanest interaction model: the iframe is fully interactive immediately (no overlay, no `pointer-events: none`, no "Click to start" pill), and scroll passes through to the Rise lesson because the parent listens for the bridge's `leadershipQuiz:wheel` postMessage and calls `window.scrollBy()`.
+
+**Prerequisite:** the iframe content must NOT internally scroll. If it does, wheel events are consumed by the iframe's own scroll first and never reach the bridge's emitter. Satisfied for this project by the `h-[640px]` QuizScreen + LayoutWrapper `p-2` in embed mode — total content stack is 656px, well inside the 700px iframe (see §10).
+
+```html
+<style>
+  #leadership-wrap { position: relative; width: 100%; }
+  #leadership-wrap iframe {
+    display: block; width: 100%; height: 700px; border: 0;
+  }
+  @media (max-width: 520px) {
+    #leadership-wrap iframe { height: 90vh; max-height: 720px; min-height: 600px; }
+  }
+</style>
+
+<div id="leadership-wrap">
+  <iframe
+    src="https://smoothieking-learnings.github.io/leadership_style_quiz/?embed=1&parentOrigin=https%3A%2F%2Frise.articulate.com"
+    title="Leadership Style Quiz" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<script>
+  (function () {
+    window.addEventListener('message', function (e) {
+      var d = e.data;
+      if (!d || typeof d !== 'object') return;
+      if (d.type === 'leadershipQuiz:wheel' && typeof d.deltaY === 'number') {
+        window.scrollBy({ top: d.deltaY, behavior: 'auto' });
+      }
+    });
+  })();
+</script>
+```
+
+**Trade-offs vs §2.5 / §2.6:**
+
+- ✅ No pre-engagement affordance — feels native, no extra click required
+- ✅ Wheel scroll passes through cleanly on desktop (mouse + trackpad)
+- ⚠️ Mobile touch passthrough is best-effort — the bridge only forwards `wheel` events, not `touchstart` / `touchmove`. iOS Safari and Android Chrome usually behave well when iframe content has no internal scroll, but it's not guaranteed across all OS/browser versions
+- ⚠️ Requires the iframe content to fit without internal scrolling (already satisfied — see §10)
+
+**Security note (optional):** the listener accepts messages from any origin. For tighter security in a host page you control, add an origin check at the top of the handler:
+
+```js
+if (e.origin !== 'https://smoothieking-learnings.github.io') return;
+```
 
 ---
 
@@ -270,11 +319,12 @@ GitHub Pages doesn't set restrictive `X-Frame-Options` headers, so the published
 
 ## 8. Scroll trapping inside Rise
 
-The number-one frustration with Rise embeds is that scrolling while the cursor is over the iframe doesn't scroll the Rise lesson. Three options, in order of complexity:
+The number-one frustration with Rise embeds is that scrolling while the cursor is over the iframe doesn't scroll the Rise lesson. Four options, in order of complexity:
 
 - **Plain Embed block (§2.1 / §2.2)** — accept that scroll is trapped while the cursor is over the iframe. Cheapest, fewest moving parts. Fine when the embed sits at the bottom of the lesson.
 - **Code Block + click-to-engage overlay (§2.5)** — scroll passes through until the learner clicks to engage. Reverts on results, so the learner can keep scrolling once they finish.
 - **Themed welcome overlay (§2.6)** — same scroll-passthrough as above, but the engagement gesture *looks* like the quiz's own welcome card. See [`RISE360_INTEGRATION_GUIDE.md`](./RISE360_INTEGRATION_GUIDE.md) §5 Pattern C for the full markup.
+- **Scroll-eavesdrop Code Block (§2.7)** — no engagement gesture at all; the iframe is always interactive, and the parent listens for the bridge's wheel postMessage and scrolls itself. Lightest-touch UX. Best-effort on mobile touch (only wheel events are forwarded — not `touchstart` / `touchmove`). Requires the iframe content to not internally scroll.
 
 The bridge emits `leadershipQuiz:wheel { deltaY }` on every wheel event inside the iframe as a best-effort signal for non-Rise hosts that *can* briefly toggle `pointer-events: none` based on it.
 
@@ -309,6 +359,7 @@ Deprecated attribute, no effect on wheel capture in modern browsers. Use the cli
 | Constraint | Implication |
 | --- | --- |
 | **Code Block height cap = 750px** | Articulate Rise 360 caps **Code Blocks** at 750px tall by default. Anything taller is clipped at the bottom. Recommended iframe height is **700px** — gives 50px headroom for Articulate's internal Code Block chrome. The QuizScreen inside the iframe is pinned to `h-[640px]` and the LayoutWrapper uses `p-2` in embed mode, so the total content stack is 656px — comfortably under 700. **Embed blocks** do not appear to share this cap. |
+| **Scroll-passthrough requires no internal iframe scroll** | The §2.5 / §2.7 patterns rely on the iframe NOT having an internal scrollbar. If the iframe content overflows its iframe height, wheel events get consumed by the iframe's own scroll before reaching the bridge or the browser's cross-iframe passthrough. The quizzes meet this via the `h-[640px]` QuizScreen ceiling + LayoutWrapper `p-2` in embed mode (total content = 656px ≤ 700px iframe). |
 | **Iframe height is one fixed value** | Cannot be different per device with a single iframe. Use the dual-block pattern in §2.4 if your Rise plan exposes per-device visibility. |
 | **Rise mobile preview ≠ real mobile** | Mobile preview is a visual clip in a desktop browser. Responsive CSS won't change behavior between Rise's preview modes — only on real devices or DevTools (see §11). |
 | **Sandboxed download blocked** | `html2canvas` → file download silently fails inside Rise. The "Share Result" button works only when the quiz is loaded standalone (outside Rise). |
@@ -383,9 +434,9 @@ You get `?embed=1`, `?autostart=1`, `?parentOrigin=`, the namespaced `postMessag
 
 Because iframe height is a single fixed number set in Rise:
 
-- **Tall iframe (~1150px)** → mobile content fits, desktop has blank space.
-- **Short iframe (~640px)** → desktop has no blank, mobile content scrolls inside the iframe.
-- **Compromise (~780px)** → matches the in-app `max-height: 800px` compressed-layout breakpoint. Current recommendation.
+- **Tall iframe (~720px)** → mobile content fits, desktop has blank space. Hits the Articulate Code Block 750 ceiling.
+- **Short iframe (~640px)** → desktop has less blank, mobile content may need to scroll inside the iframe.
+- **Compromise (~700px)** → 50px under the Articulate Code Block 750 cap, comfortably fits the `h-[640px]` content stack. **Current recommendation.**
 
 If Rise exposes per-device block visibility for your Embed blocks, the cleanest fix is two embed blocks (one per device) with different heights — see §2.4.
 
