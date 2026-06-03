@@ -49,7 +49,7 @@ Each question presents one option per style. Option order is shuffled at runtime
 **A team member tells you they want to step up and become a Team Captain. How do you help them get there?**
 
 - **The Teacher** — I write out a clear, step-by-step roadmap of the exact tasks and milestones they need to hit to be ready.
-- **The Role Model** — I have them shadow me for three shifts so they can see exactly how I handle the store.
+- **The Role Model** — I have them shadow me for three shifts so they can see exactly how I handle the job.
 - **The Coach** — I give them a real project, like running the daily prep list, and say, “Show me your game plan for this, and let’s tweak it together.”
 - **The Supporter** — I sit down and ask about their long-term goals, then let them know I'm here to support their growth.
 
@@ -72,7 +72,7 @@ Each question presents one option per style. Option order is shuffled at runtime
 ### Question 7
 **The afternoon shift is falling apart because two team members are running 15 minutes late. How do you manage the floor?**
 
-- **The Teacher** — I quickly adjust the staffing plan, assigning the remaining team members to double up on specific high-priority tasks.
+- **The Teacher** — I gather the team for a quick 30-second huddle and explain, “When we’re short-handed, we focus on throughput first. Let’s prioritize taking orders, making smoothies, and keeping the line moving. Everything else can wait.”
 - **The Role Model** — I don't panic or complain; I calmly pick up a blender and match the speed of the rush until backup arrives.
 - **The Coach** — I look at the team captain handing off the floor and ask: "We're short-handed for the next 15 minutes. Where do you need me to anchor so the hand-off goes smoothly?"
 - **The Supporter** — I tell the morning team members who are scheduled to clock out: “I know your shift is over, but I really need your help for ten more minutes. I’ll make sure you get paid the extra time.”

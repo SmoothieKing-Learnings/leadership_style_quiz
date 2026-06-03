@@ -41,7 +41,7 @@ export const QUESTIONS = [
     text: 'A team member tells you they want to step up and become a Team Captain. How do you help them get there?',
     options: [
       { id: 'q4-teacher', text: 'I write out a clear, step-by-step roadmap of the exact tasks and milestones they need to hit to be ready.', styleId: 'teacher' },
-      { id: 'q4-role_model', text: 'I have them shadow me for three shifts so they can see exactly how I handle the store.', styleId: 'role_model' },
+      { id: 'q4-role_model', text: 'I have them shadow me for three shifts so they can see exactly how I handle the job.', styleId: 'role_model' },
       { id: 'q4-coach', text: 'I give them a real project, like running the daily prep list, and say, “Show me your game plan for this, and let’s tweak it together.”', styleId: 'coach' },
       { id: 'q4-supporter', text: 'I sit down and ask about their long-term goals, then let them know I\'m here to support their growth.', styleId: 'supporter' }
     ]
@@ -70,7 +70,7 @@ export const QUESTIONS = [
     id: 'q7',
     text: 'The afternoon shift is falling apart because two team members are running 15 minutes late. How do you manage the floor?',
     options: [
-      { id: 'q7-teacher', text: 'I quickly adjust the staffing plan, assigning the remaining team members to double up on specific high-priority tasks.', styleId: 'teacher' },
+      { id: 'q7-teacher', text: 'I gather the team for a quick 30-second huddle and explain, “When we’re short-handed, we focus on throughput first. Let’s prioritize taking orders, making smoothies, and keeping the line moving. Everything else can wait.”', styleId: 'teacher' },
       { id: 'q7-role_model', text: 'I don\'t panic or complain; I calmly pick up a blender and match the speed of the rush until backup arrives.', styleId: 'role_model' },
       { id: 'q7-coach', text: 'I look at the team captain handing off the floor and ask: "We\'re short-handed for the next 15 minutes. Where do you need me to anchor so the hand-off goes smoothly?"', styleId: 'coach' },
       { id: 'q7-supporter', text: 'I tell the morning team members who are scheduled to clock out: “I know your shift is over, but I really need your help for ten more minutes. I’ll make sure you get paid the extra time.”', styleId: 'supporter' }

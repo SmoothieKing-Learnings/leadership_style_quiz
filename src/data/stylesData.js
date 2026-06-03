@@ -70,7 +70,7 @@ export const STYLES = [
         description: 'Your personal hustle raises the energy of everyone around you without a word being said.'
       },
       {
-        title: 'The store blueprint',
+        title: 'The pristine store',
         description: 'Your store is consistently the sharpest because you live the standard rather than just describing it.'
       },
       {
@@ -85,7 +85,7 @@ export const STYLES = [
       },
       {
         title: 'Burnout',
-        description: 'If the store falls apart every time you take a day off, you\'ve built a dependency, not a team.'
+        description: 'If the team falls apart every time you take a day off, you\'ve built a dependency, not a team.'
       },
       {
         title: 'Silent expectations',
@@ -145,11 +145,11 @@ export const STYLES = [
     howToGrow: [
       {
         title: 'Read the operational clock',
-        description: 'When blenders are screaming, drop the questions and step in with direct calls: “I’m on powders, you take the register.” Save the windshield view for after the rush.'
+        description: 'When blenders are screaming, prioritize clear direction over coaching conversations: “I’m on powders, you take the register.” Save the ‘windshield view’ for after the rush.'
       },
       {
         title: 'Protect the standards',
-        description: 'If someone violates the phone policy, don\'t ask how they feel about it. Say: “Our standard is no phones on the floor because it pulls focus from guests. Drop it in the locker.”'
+        description: 'If someone violates the phone policy, you don\'t need to debate or negotiate the standard. Explain the expectation clearly and address any concerns after the standard has been met: “Our standard is no phones on the floor. Please take a moment to put it in your locker, then come back and join us.”'
       },
       {
         title: 'Keep small fixes small',
@@ -194,16 +194,16 @@ export const STYLES = [
     ],
     howToGrow: [
       {
-        title: 'Remember that clear is caring',
-        description: 'Avoiding tough talks about tardiness or the dress code forces your reliable team members to work twice as hard. Holding people accountable is the most caring thing you can do.'
+        title: 'Remember that being clear is caring',
+        description: 'Avoiding tough talks about tardiness or the dress code forces your reliable team members to work twice as hard. Caring for your team sometimes means having conversations that feel uncomfortable.'
       },
       {
         title: 'Lean on shared standards',
-        description: 'Instead of asking for a favor, say: “Our team rule is that everyone helps with the close. I need you on dishes.” The standard isn\'t personal. It\'s just the standard.'
+        description: 'Instead of asking for a favor, say: “We all own the close together. I’d like you to jump on dishes while I finish the inventory count.” The standard isn\'t personal: it\'s just how we work together.'
       },
       {
         title: 'Stop putting off hard conversations',
-        description: 'Schedule it for your next shift. Pull them aside, lead with clarity, listen with empathy, and align on what needs to change. The Giving Planned Feedback lesson gives you the structure to do it well.'
+        description: 'Address it promptly rather than hoping it resolves itself. Pull them aside, lead with clarity, listen with empathy, and align on what needs to change. The Giving Planned Feedback lesson gives you the structure to do it well.'
       }
     ],
     color: STYLE_COLORS.supporter
