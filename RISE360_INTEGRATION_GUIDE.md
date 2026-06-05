@@ -377,7 +377,7 @@ Replicate your React welcome screen markup directly in the Code Block. The overl
 
 ```html
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Poppins:wght@400;600&display=swap');
 
   #app-wrap { position: relative; width: 100%; }
   #app-wrap iframe {
@@ -401,23 +401,23 @@ Replicate your React welcome screen markup directly in the Code Block. The overl
   /* — Style your welcome to match your React app's welcome — */
   #app-welcome .logo { height: 28px; margin-bottom: 28px; }
   #app-welcome h1 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Lora', Georgia, serif;
     font-size: 44px; font-weight: 700; color: #930018;
     line-height: 1.1; margin: 0 0 14px; max-width: 360px;
   }
   #app-welcome p {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Poppins', system-ui, sans-serif;
     font-size: 14px; line-height: 1.7; color: #40000F;
     margin: 0 0 26px; max-width: 340px;
   }
-  #app-welcome button { font-family: 'DM Sans', system-ui, sans-serif; cursor: pointer; border: 0; }
+  #app-welcome button { font-family: 'Poppins', system-ui, sans-serif; cursor: pointer; border: 0; }
   #app-welcome .learn {
     background: none; color: #930018;
     font-weight: 600; font-size: 15px;
     margin-bottom: 28px; padding: 4px 8px;
   }
   #app-welcome .start {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Lora', Georgia, serif;
     background: #930018; color: #fff;
     font-weight: 700; font-size: 22px;
     padding: 16px 68px; border-radius: 999px;

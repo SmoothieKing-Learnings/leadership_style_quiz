@@ -63,8 +63,8 @@ Body copy on the primary color switches to `bg-primary` (`#FFF9EF`) to satisfy W
 
 | Token | Family | Usage |
 | --- | --- | --- |
-| `font-display` / `font-heading` | **Playfair Display**, Georgia, serif | Hero titles, screen headings, result names |
-| `font-body` | **DM Sans**, system-ui, sans-serif | All body copy, buttons, labels |
+| `font-display` / `font-heading` | **Lora**, Georgia, serif | Hero titles, screen headings, result names |
+| `font-body` | **Poppins**, system-ui, sans-serif | All body copy, buttons, labels |
 
 Both families are loaded from Google Fonts in [`index.html`](./index.html) and applied to `<body>` via [`src/index.css`](./src/index.css).
 

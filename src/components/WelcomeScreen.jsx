@@ -3,7 +3,7 @@ import logo from '../assets/logo.png';
 
 export default function WelcomeScreen({ onStart }) {
   return (
-    <div className="w-full animate-fade-in flex flex-col items-center">
+    <div className="w-full h-[640px] animate-fade-in flex flex-col items-center justify-center">
       {/* Element 1 — logo (delayed slightly, comes from above) */}
       <motion.img
         src={logo}
@@ -16,7 +16,7 @@ export default function WelcomeScreen({ onStart }) {
 
       {/* Element 2 — headline (rises from below) */}
       <motion.h1
-        className="font-heading text-[36px] font-extrabold text-quiz-primary mb-6 tracking-tight"
+        className="font-heading text-[36px] font-bold text-quiz-text mb-6 tracking-tight"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.20, duration: 0.45 }}
@@ -36,7 +36,7 @@ export default function WelcomeScreen({ onStart }) {
 
       {/* Element 4 — body text */}
       <motion.p
-        className="text-base md:text-lg text-quiz-text/80 mb-10 max-w-md"
+        className="text-base md:text-lg text-quiz-text mb-10 max-w-md"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.38, duration: 0.40 }}

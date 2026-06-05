@@ -150,11 +150,11 @@ export default function ResultsScreen({ resultsData, onRestart }) {
 
         {/* H1 — single style name, or compact "Hybrid Leader" label in a tie */}
         {isTie ? (
-          <h1 className="font-heading text-xs font-black text-quiz-text mt-6 mb-2 text-center">
+          <h1 className="font-heading text-xs font-bold text-quiz-text mt-6 mb-2 text-center">
             You are a Hybrid Leader
           </h1>
         ) : (
-          <h1 className="font-heading text-3xl font-black text-quiz-text mt-6 mb-2 text-center">
+          <h1 className="font-heading text-3xl font-bold text-quiz-text mt-6 mb-2 text-center">
             {topStyles[0].name}
           </h1>
         )}
@@ -174,11 +174,11 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                 <div className="text-xs text-center mb-4 text-quiz-text space-y-0.5">
                   <div>
                     <strong className="text-quiz-text">Approach:</strong>{' '}
-                    <span className="text-quiz-text/80">{style.subtitle}</span>
+                    <span className="text-quiz-text">{style.subtitle}</span>
                   </div>
                   <div>
                     <strong className="text-quiz-text">Focus:</strong>{' '}
-                    <span className="text-quiz-text/80">{style.focus}</span>
+                    <span className="text-quiz-text">{style.focus}</span>
                   </div>
                 </div>
 
@@ -198,7 +198,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                   <div className="flex flex-col gap-3">
                     <div className="flex gap-3">
                       <strong className="w-28 flex-shrink-0 text-base uppercase text-green-800">Strengths</strong>
-                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-1 flex-1">
+                      <ul className="list-disc pl-5 text-xs text-quiz-text space-y-1 flex-1">
                         {style.strengths.map((s, i) => (
                           <li key={i}>{s.title}</li>
                         ))}
@@ -206,7 +206,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     </div>
                     <div className="flex gap-3">
                       <strong className="w-28 flex-shrink-0 text-base uppercase text-quiz-primary">Blind Spots</strong>
-                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-1 flex-1">
+                      <ul className="list-disc pl-5 text-xs text-quiz-text space-y-1 flex-1">
                         {style.blindSpots.map((b, i) => (
                           <li key={i}>{b.title}</li>
                         ))}
@@ -245,7 +245,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                   <div className="flex flex-col gap-4 mt-3">
                     <div>
                       <strong className="block mb-2 text-base uppercase text-green-800">Where You Might Shine</strong>
-                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-2">
+                      <ul className="list-disc pl-5 text-xs text-quiz-text space-y-2">
                         {style.strengths.map((s, i) => (
                           <li key={i}>
                             <span className="font-bold">{s.title}.</span>{' '}
@@ -256,7 +256,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     </div>
                     <div>
                       <strong className="block mb-2 text-base uppercase text-quiz-primary">Where You Might Struggle</strong>
-                      <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-2">
+                      <ul className="list-disc pl-5 text-xs text-quiz-text space-y-2">
                         {style.blindSpots.map((b, i) => (
                           <li key={i}>
                             <span className="font-bold">{b.title}.</span>{' '}
@@ -274,7 +274,7 @@ export default function ResultsScreen({ resultsData, onRestart }) {
                     {style.howToGrow?.length > 0 && (
                       <div>
                         <strong className="block mb-2 text-base uppercase text-quiz-text">How to Grow</strong>
-                        <ul className="list-disc pl-5 text-xs text-quiz-text/80 space-y-2">
+                        <ul className="list-disc pl-5 text-xs text-quiz-text space-y-2">
                           {style.howToGrow.map((g, i) => (
                             <li key={i}>
                               <span className="font-bold">{g.title}.</span>{' '}
@@ -303,32 +303,32 @@ export default function ResultsScreen({ resultsData, onRestart }) {
         <h3 className="font-heading text-lg font-bold text-quiz-text mb-3">
           What to do with what you just learned
         </h3>
-        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+        <p className="text-sm text-quiz-text leading-relaxed mb-3">
           You might be feeling a little exposed right now. Maybe you saw yourself clearly in one of those blind spots for the first time. Maybe you realized the thing you thought was your strength has been quietly working against you on certain shifts.
         </p>
         <p className="text-sm font-semibold text-quiz-text leading-relaxed mb-3">
           That&apos;s exactly where growth starts.
         </p>
-        <p className="text-sm text-quiz-text/80 leading-relaxed">
+        <p className="text-sm text-quiz-text leading-relaxed">
           Your default style isn&apos;t something to fix. It&apos;s something to build from. Leadership isn&apos;t a label, it&apos;s a choice you make every time you step onto the floor. The goal isn&apos;t to abandon what comes naturally. It&apos;s to recognize the moment it stops serving your team and have the courage to reach for something different.
         </p>
 
         <h3 className="font-heading text-lg font-bold text-quiz-text mt-6 mb-3">
           Building the habit of flexibility
         </h3>
-        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+        <p className="text-sm text-quiz-text leading-relaxed mb-3">
           The floor is always giving you signals. Learning to read them is the real skill underneath all four styles. Three habits will help you build that muscle:
         </p>
-        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+        <p className="text-sm text-quiz-text leading-relaxed mb-3">
           <strong className="font-bold text-quiz-text">The pre-shift scan.</strong> Before the doors open, take thirty seconds to read the room. Who looks tired? Who is stepping into something new this week? You won&apos;t always get it right. But the habit of asking changes how you show up.
         </p>
-        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+        <p className="text-sm text-quiz-text leading-relaxed mb-3">
           <strong className="font-bold text-quiz-text">The mid-rush check.</strong> When things get heavy, ask yourself one question: is what I&apos;m doing right now helping my team or adding to the pressure? It doesn&apos;t take long. It just takes honesty.
         </p>
-        <p className="text-sm text-quiz-text/80 leading-relaxed mb-3">
+        <p className="text-sm text-quiz-text leading-relaxed mb-3">
           <strong className="font-bold text-quiz-text">The post-shift reflection.</strong> Think back to one moment where you leaned too hard into your default and hit a blind spot. Write it down. Name what you&apos;d do differently. Carry it into your next shift.
         </p>
-        <p className="text-sm text-quiz-text/80 leading-relaxed">
+        <p className="text-sm text-quiz-text leading-relaxed">
           Expanding your range feels like writing with your non-dominant hand at first. It will feel unnatural. Do it anyway. Your team doesn&apos;t need you to feel comfortable. They need you to be the leader they need in that exact moment.
         </p>
       </div>

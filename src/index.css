@@ -4,7 +4,7 @@
 
 /*
  * SmoothieKing Learnings unified typography.
- * Body copy uses DM Sans; display/heading uses Playfair Display
+ * Body copy uses Poppins; display/heading uses Lora
  * via the `font-display` / `font-heading` Tailwind utilities.
  * Both fonts are loaded from Google Fonts in index.html.
  */

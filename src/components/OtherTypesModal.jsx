@@ -86,7 +86,7 @@ export default function OtherTypesModal({
               <h3 className="font-heading text-lg font-bold text-quiz-text mb-2">
                 {style.name}
               </h3>
-              <p className="text-sm text-quiz-text/80 leading-relaxed">
+              <p className="text-sm text-quiz-text leading-relaxed">
                 {style.summary || style.description}
               </p>
             </div>

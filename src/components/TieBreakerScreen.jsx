@@ -98,11 +98,11 @@ export default function TieBreakerScreen({
             </p>
             <h2
               id="tie-breaker-title"
-              className="font-heading text-2xl md:text-3xl font-black text-quiz-text mb-4 leading-tight"
+              className="font-heading text-2xl md:text-3xl font-bold text-quiz-text mb-4 leading-tight"
             >
               {attemptIdx === 0 ? "It's a tie!" : "Still a tie!"}
             </h2>
-            <p className="text-sm text-quiz-text/80 leading-relaxed mb-6">
+            <p className="text-sm text-quiz-text leading-relaxed mb-6">
               Your top styles are equally weighted. Answer one more question — with just the tied options — and we'll lock in your primary style.
             </p>
             <button
