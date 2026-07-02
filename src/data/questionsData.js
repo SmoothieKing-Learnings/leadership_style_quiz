@@ -63,7 +63,7 @@ export const QUESTIONS = [
       { id: 'q6-teacher', text: 'I keep everyone focused on the task so we can hit our operational must-dos and get out of the store on time.', styleId: 'teacher' },
       { id: 'q6-role_model', text: 'I lead from the front, work the longest and hardest, and show them by example that we don\'t drop our standards just because we\'re tired.', styleId: 'role_model' },
       { id: 'q6-coach', text: 'I gather the team for a quick 30-second huddle and ask, "Alright, we\'re stretched thin. What is one non-essential task we can temporarily stop doing right now to make this shift easier?"', styleId: 'coach' },
-      { id: 'q6-supporter', text: 'I blend up a custom off-menu smoothie, split it into sample cups for the whole line, and say, “Everyone, I know this shift is tough. Thank you so much for having my back right now.”', styleId: 'supporter' }
+      { id: 'q6-supporter', text: 'I blend up a team favorite smoothie, split it into sample cups for the whole line, and say, “Everyone, I know this shift is tough. Thank you so much for having my back right now.”', styleId: 'supporter' }
     ]
   },
   {
